@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml><project xmlns="https://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.fathzer</groupId>
+		<artifactId>parent-pom</artifactId>
+		<version>1.0.8</version>
+	</parent>
+	<artifactId>chess-test-utils</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<name>chess-test-utils</name>
+	<description>Some JUnit abstract test classes to test chess related libraries.</description>
+	<url>https://github.com/fathzer-games/chess-test-utils</url>
+
+	<scm>
+		<url>https://github.com/fathzer-games/chess-test-utils.git</url>
+		<connection>https://github.com/fathzer-games/chess-test-utils.git</connection>
+	</scm>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<check-dependencies-java-version>17</check-dependencies-java-version>
+		<maven.compiler.release>17</maven.compiler.release>
+		<sonar.organization>fathzer-games</sonar.organization>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<!-- This dependency is used to compile the com.fathzer.chess.utils.test package.
+			 But is not intended to be a transitive dependency => It is optional -->
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.11.4</version>
+		</dependency>
+	</dependencies>
+</project>
