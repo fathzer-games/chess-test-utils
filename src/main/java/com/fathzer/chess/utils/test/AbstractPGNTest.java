@@ -15,32 +15,61 @@ import com.fathzer.chess.utils.model.Variant;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+/** An test class for <a href="https://en.wikipedia.org/wiki/Portable_Game_Notation">PGN</a> builder.
+ * @param <B> the type of the board
+ * @param <M> the type of the move
+ */
 public abstract class AbstractPGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M> {
-	// Lasker vs Thomas, 1912
+	/** The moves, in UCI format, of the famous Lasker vs Thomas, 1912 game */
 	protected static final String FATAL_ATTRACTION_MOVES = "d2d4 e7e6 g1f3 f7f5 b1c3 g8f6 c1g5 f8e7 g5f6 e7f6 e2e4"
 			+ " f5e4 c3e4 b7b6 f3e5 e8g8 f1d3 c8b7 d1h5 d8e7 h5h7 g8h7 e4f6 h7h6 e5g4 h6g5 h2h4 g5f4 g2g3 f4f3 d3e2"
 			+ " f3g2 h1h2 g2g1 e1d2";
 
+    /** The PGN event tag */
     protected static final String EVENT_TAG = "Event";
+
+    /** The PGN site tag */
     protected static final String SITE_TAG = "Site";
+
+    /** The PGN date tag */
     protected static final String DATE_TAG = "Date";
+
+    /** The PGN round tag */
     protected static final String ROUND_TAG = "Round";
-    protected static final String FEN_TAG = "FEN";
-    protected static final String VARIANT_TAG = "Variant";
-    protected static final String RESULT_TAG = "Result";
+
+    /** The PGN white tag */
     protected static final String WHITE_TAG = "White";
+
+    /** The PGN black tag */
     protected static final String BLACK_TAG = "Black";
-    
-    // https://github.com/fsmosca/PGN-Standard/blob/master/PGN-Standard.txt 8.1.1
+
+    /** The PGN result tag */
+    protected static final String RESULT_TAG = "Result";
+
+    /** The PGN FEN tag */
+    protected static final String FEN_TAG = "FEN";
+
+    /** The PGN variant tag */
+    protected static final String VARIANT_TAG = "Variant";
+
+     
+    /** The seven tag roster keys in the order specified in the PGN specification (see <a href="https://github.com/fsmosca/PGN-Standard/blob/master/PGN-Standard.txt">PGN-Standard.txt</a>) */
     protected static final String SEVEN_TAG_ROSTER_KEYS = EVENT_TAG+" "+SITE_TAG+" "+DATE_TAG+" "+ROUND_TAG+" "+WHITE_TAG+" "+BLACK_TAG+" "+RESULT_TAG;
     
-    protected static final String UNKNOWN = "?";
+    private static final String UNKNOWN = "?";
 
+    /** The value of the PGN result tag when white won */
     protected static final String WHITE_WON = "1-0";
+    /** The value of the PGN result tag when black won */
     protected static final String BLACK_WON = "0-1";
+    /** The value of the PGN result tag when the game ended in a draw */
     protected static final String DRAW = "1/2-1/2";
+    /** The value of the PGN result tag when the game is still playing */
     protected static final String PLAYING = "*";
 
+    /** Gets the PGN builder to test.
+     * @return a PGN builder
+    */
     protected abstract Function<B, String> getPGNBuilder();
 
     @Disabled
@@ -89,8 +118,17 @@ public abstract class AbstractPGNTest<B extends IBoard<M>, M> extends AbstractAd
         }
     }
 
+    /** The content of a PGN 
+     * @param tagPairs the tag pairs of the parsed PGN.
+     * @param moves the move list of the PGN
+    */
     protected record Content(Map<String, String> tagPairs, List<String> moves) {}
  
+    /** Parses a PGN string into a Content record.
+     * @param pgn the PGN string to parse
+     * @return a Content record with the parsed data
+     * @throws IllegalArgumentException if the PGN string is not valid
+     */
     protected Content parse(String pgn) {
         final String[] lines = pgn.split("\n");
         final Map<String, String> tagPairs = new LinkedHashMap<>();
@@ -129,6 +167,10 @@ public abstract class AbstractPGNTest<B extends IBoard<M>, M> extends AbstractAd
         return new Content(tagPairs, moves);
     }
 
+    /** Parses a partial move list and add it to a given list.
+     * @param moves the list to fill
+     * @param tokens the tokens to parse
+     */
     protected static void parseMoves(List<String> moves, String[] tokens) {
         for (String token : tokens) {
             if (!token.isEmpty() && !token.endsWith(".")) {
