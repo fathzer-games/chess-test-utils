@@ -72,7 +72,6 @@ public abstract class AbstractPGNTest<B extends IBoard<M>, M> extends AbstractAd
     */
     protected abstract Function<B, String> getPGNBuilder();
 
-    @Disabled
     @Test
     void test960() {
         //TODO
@@ -80,7 +79,7 @@ public abstract class AbstractPGNTest<B extends IBoard<M>, M> extends AbstractAd
     }
 
     @Test
-    void testPGN() {
+    void testBasicPGN() {
     	Function<B, String> pgnBuilder = getPGNBuilder();
     	
         // Lasker vs Thomas, 1912
@@ -107,9 +106,17 @@ public abstract class AbstractPGNTest<B extends IBoard<M>, M> extends AbstractAd
     }
     
     @Test
-    void testDrawNonStandardStart() {
+    void testNonStandardStart() {
         // Test with draw and non standard start FEN
     	//TODO
+        fail("Not yet implemented");
+    }
+    
+    @Test
+    void testDraw() {
+        // Test with draw and non standard start FEN
+    	//TODO
+        fail("Not yet implemented");
     }
 
     private void addMoves(B board, String[] uciMoves) {

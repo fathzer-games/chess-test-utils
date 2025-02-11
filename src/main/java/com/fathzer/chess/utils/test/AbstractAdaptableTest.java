@@ -3,10 +3,9 @@ package com.fathzer.chess.utils.test;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-import org.junit.jupiter.api.BeforeEach;
-
 import com.fathzer.chess.utils.model.IBoard;
 import com.fathzer.chess.utils.model.TestAdapter;
+import com.fathzer.chess.utils.model.Variant;
 
 /** An abstract test class that requires a {@link TestAdapter}.
  * @param <B> the type of the board
@@ -34,15 +33,14 @@ public abstract class AbstractAdaptableTest<B extends IBoard<M>, M> {
 	
     /** The test adapter to use for the tests */
     protected TestAdapter<B, M> u;
-
-    /** Set up  the test class
-     * <br>By default, this method calls {@link #getAdapter()} and stores the result in the {@link #u} field.
+    
+    /** Creates a new instance.
+     * @throws IllegalStateException if the resource file is not found or if the service class can't be loaded.
      */
-    @BeforeEach
-    protected void setUp() {
+    protected AbstractAdaptableTest() {
         u = getAdapter();
     }
-    
+
     /** Gets the {@link TestAdapter} to use for this tests.
      * <br>Default implementation returns an instance of the service class whose name is in
      * the <code>META-INF/services/com.fathzer.chess.utils.model.TestAdapter</code> resource file.
@@ -60,5 +58,15 @@ public abstract class AbstractAdaptableTest<B extends IBoard<M>, M> {
     	} else {
     		return (TestAdapter<B, M>) ADAPTER;
     	}
+    }
+
+    /** Checks if a variant is supported by the current adapter.
+     * <br>By default, this method calls the {@link TestAdapter#isSupported(Variant)} method.
+     * @param variant The variant to test
+     * @return <code>true</code> if the variant is supported, <code>false</code> otherwise
+     * @see TestAdapter#isSupported(Variant)
+     */
+    public boolean isSupported(Variant variant) {
+        return u.isSupported(variant);
     }
 }
