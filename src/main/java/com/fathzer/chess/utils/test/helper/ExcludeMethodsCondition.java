@@ -16,6 +16,9 @@ class ExcludeMethodsCondition implements ExecutionCondition {
     private static final ConditionEvaluationResult ENABLED_IF_EXCLUDE_TAG_IS_INVALID =
             ConditionEvaluationResult.enabled(
                     "@ExcludeMethods does not have a valid method name to exclude, all tests will be run");
+    private static final ConditionEvaluationResult ENABLED_IF_CLASS =
+            ConditionEvaluationResult.enabled(
+                    "@ExcludeMethods does not exclude classes");
 
     @Override
     public ConditionEvaluationResult evaluateExecutionCondition(
@@ -23,6 +26,13 @@ class ExcludeMethodsCondition implements ExecutionCondition {
         final AnnotatedElement element = context
                 .getElement()
                 .orElseThrow(IllegalStateException::new);
+        if (element instanceof Class) {
+            return ENABLED_IF_CLASS;
+        } else if (!(element instanceof Method)) {
+            throw new IllegalStateException("This method should not be called for non-method and non-class elements");
+        }
+        final Method method = (Method) element;
+
         final Optional<Set<String>> tagsToExclude = AnnotationUtils.findAnnotation(
                 context.getRequiredTestClass(),
                 ExcludeMethods.class
@@ -36,29 +46,20 @@ class ExcludeMethodsCondition implements ExecutionCondition {
                 .allMatch(s -> (s == null) || s.trim().isEmpty())) {
             return ENABLED_IF_EXCLUDE_TAG_IS_INVALID;
         }
-        final Optional<String> tag = (element instanceof Method method) ? Optional.of(method.getName()) : Optional.empty();
-        if (tagsToExclude.get().contains(tag.map(String::trim).orElse(""))) {
+        final String tag = method.getName();
+        if (tagsToExclude.get().contains(tag)) {
             return ConditionEvaluationResult
                     .disabled(String.format(
-                            "test method \"%s\" has tag \"%s\" which is on the @ExcludeTags list \"[%s]\", test will be skipped",
-                            (element instanceof Method method) ? method.getName()
-                                    : element.getClass().getSimpleName(),
-                            tag.get(),
+                            "Test method \"%s\" which is on the @ExcludeMethods list \"[%s]\", test will be skipped",
+                            tag,
                             tagsToExclude.get().stream().collect(Collectors.joining(","))
                     ));
         }
         return ConditionEvaluationResult.enabled(
                 String.format(
-                        "test method \"%s\" has no tag or tag \"%s\" which is not on the @ExcludeTags list \"[%s]\", test will be run",
-                        (element instanceof Method method) ? method.getName()
-                                : element.getClass().getSimpleName(),
-                        tag.orElse("<no tag present>"),
+                        "Test method \"%s\" is not on the @ExcludeMethods list \"[%s]\", test will be run",
+                        tag,
                         tagsToExclude.get().stream().collect(Collectors.joining(","))
                 ));
-    }
-    
-    public static void main(String[] args) {
-    	new ExcludeMethodsCondition() {
-		};
     }
 }
