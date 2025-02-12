@@ -12,8 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Retention(RUNTIME)
 @ExtendWith(ExcludeMethodsCondition.class)
 public @interface ExcludeMethods {
-    /** Gets the names of the methods to exclude.
-     * @return methods names
-     */
-    String[] value();
+	/** Gets the names of the methods to exclude.
+	 * @return methods names
+	 */
+	String[] value();
 }

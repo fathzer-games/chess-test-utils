@@ -51,16 +51,16 @@ public interface IBoard<M> {
 	 * @param move The move to check
 	 * @return true if the move is legal, false otherwise
 	 */
-    default boolean isLegal(M move) {
-    	final boolean pseudoLegal = getMoves().stream().anyMatch(m -> m.equals(move));
-    	if (pseudoLegal) {
-    		final boolean result = makeMove(move);
-    		if (result) {
-    			unmakeMove();
-    		}
-    		return result;
-    	} else {
-    		return false;
-    	}
-    }
+	default boolean isLegal(M move) {
+		final boolean pseudoLegal = getMoves().stream().anyMatch(m -> m.equals(move));
+		if (pseudoLegal) {
+			final boolean result = makeMove(move);
+			if (result) {
+				unmakeMove();
+			}
+			return result;
+		} else {
+			return false;
+		}
+	}
 }

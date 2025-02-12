@@ -51,7 +51,7 @@ public class JChessBoard implements IBoard<Move>{
 		for (Move mv : moves) {
 			history.add(mv);
 		}
-        return history;
+		return history;
 	}
 
 	@Override

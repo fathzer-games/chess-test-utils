@@ -17,8 +17,8 @@ import com.fathzer.chess.utils.model.Variant;
 @Retention(RUNTIME)
 @ExtendWith(ExcludeMethodsCondition.class)
 public @interface Supports {
-    /** Gets the supported variants.
-     * @return methods names
-     */
-    Variant[] value();
+	/** Gets the supported variants.
+	 * @return methods names
+	 */
+	Variant[] value();
 }

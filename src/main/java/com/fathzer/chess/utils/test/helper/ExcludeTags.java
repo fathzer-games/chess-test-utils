@@ -12,8 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Retention(RUNTIME)
 @ExtendWith(ExcludeTagsCondition.class)
 public @interface ExcludeTags {
-    /** Gets the tags to exclude.
-     * @return tags names
-     */
-    String[] value();
+	/** Gets the tags to exclude.
+	 * @return tags names
+	 */
+	String[] value();
 }

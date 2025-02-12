@@ -1,4 +1,4 @@
-package com.fathzer.chess.utils.test;
+package com.fathzer.chess.utils.test.chesslib;
 
 import com.fathzer.chess.utils.model.TestAdapter;
 import com.fathzer.chess.utils.model.Variant;

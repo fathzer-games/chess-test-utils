@@ -1,4 +1,4 @@
-package com.fathzer.chess.utils.test;
+package com.fathzer.chess.utils.test.chesslib;
 
 import java.util.List;
 
