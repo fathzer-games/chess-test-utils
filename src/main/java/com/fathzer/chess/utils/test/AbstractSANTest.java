@@ -44,7 +44,7 @@ public abstract class AbstractSANTest<B extends IBoard<M>, M> extends AbstractAd
      * <br>The default implementation asserts an {@link IllegalArgumentException} is thrown if the move is illegal.
      * <br>Subclasses may override this method to change the behavior if your library handles illegal moves differently.
      * @param converter the test SAN converter
-     * @param move the move to convert, expressed in uci format
+     * @param uciMove the move to convert, expressed in uci format
      * @param board the board the move is played on
      */
     protected void checkIllegalMove(SANConverter<B, M> converter, String uciMove, B board) {
@@ -140,11 +140,8 @@ public abstract class AbstractSANTest<B extends IBoard<M>, M> extends AbstractAd
     @Tag("Chess960")
     void test() {
         var converter = getSANConverter();
-        B board;
-        if (u.isSupported(CHESS960)) {
-            // Castling in chess960
-            board = u.fenToBoard("4k3/8/8/8/8/8/r5q1/4K3 b - - 0 1", CHESS960);
-            //TODO
-        }
+        // Castling in chess960
+        B board = u.fenToBoard("4k3/8/8/8/8/8/r5q1/4K3 b - - 0 1", CHESS960);
+        //TODO
      }
 }

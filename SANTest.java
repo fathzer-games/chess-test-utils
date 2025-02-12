@@ -1,8 +1,9 @@
-package com.fathzer.chess.utils.test;
+package com.fathzer.chess.utils.test.chesslib;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.fathzer.chess.utils.test.AbstractSANTest;
 import com.fathzer.chess.utils.test.helper.ExcludeTags;
 import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.move.Move;

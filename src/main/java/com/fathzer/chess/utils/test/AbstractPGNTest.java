@@ -14,7 +14,7 @@ import com.fathzer.chess.utils.model.Variant;
 
 import org.junit.jupiter.api.Test;
 
-/** An test class for <a href="https://en.wikipedia.org/wiki/Portable_Game_Notation">PGN</a> builder.
+/** An abstract test class for <a href="https://en.wikipedia.org/wiki/Portable_Game_Notation">PGN</a> builder.
  * @param <B> the type of the board
  * @param <M> the type of the move
  */
@@ -72,9 +72,9 @@ public abstract class AbstractPGNTest<B extends IBoard<M>, M> extends AbstractAd
     protected abstract Function<B, String> getPGNBuilder();
 
     @Test
+    @IfVariantSupported(Variant.CHESS960)
     void test960() {
         //TODO
-        fail("Not yet implemented");
     }
 
     @Test

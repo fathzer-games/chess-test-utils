@@ -26,7 +26,7 @@ To use it, start by adding the following dependency in your project:
 </dependency>
 ```
 
-Then write a concrete implementation of `Iboard` and a subclass of `TestAdapter`
+Then write concrete implementations of `Iboard` and `TestAdapter`
 `IBoard` is the interface used by the chess libraries to represent a chess board and access to basic functionalities like playing moves or getting the list of possible moves.
 Usually a board implementation is straight-forward because its methods are probably already implemented in the chess library you're testing. 
 
@@ -103,13 +103,21 @@ public class ChessLibAdapter implements TestAdapter<ChessLibBoard, Move> {
 		}
 		return new Move(Square.fromValue(from.toUpperCase()), Square.fromValue(to.toUpperCase()), p);
 	}
+	
+	
+	@Override
+	public int getPiece(String algebraicNotation) {
+	   //TODO
+	   return 0;
+	}
 }
 ```
-If your chess library supports [Chess960](https://en.wikipedia.org/wiki/Chess960), please override the `isSupported(Variant)` as in this example.
+If your chess library supports [Chess960](https://en.wikipedia.org/wiki/Chess960), add the `@Supports(Variant.Chess960)` to the class.
+
 ```java
-    @Override
-    public boolean isSupported(Variant variant) {
-        return true;
+    @Supports(Variant.Chess960)
+    public class MyLibAdapter implements TestAdapter<MyBoard, Move> {
+      ...
     }
 ```
 

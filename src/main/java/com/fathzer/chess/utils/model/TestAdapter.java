@@ -21,13 +21,4 @@ public interface TestAdapter<B extends IBoard<M>, M> {
      * @return a move instance.
      */
     M move(B board, String uciMove);
-
-    /** Returns whether the adapter supports the given variant.
-     * <br>By default, this method returns <code>true</code> if the variant is <code>STANDARD</code>.
-     * @param variant the variant to check
-     * @return <code>true</code> if the adapter supports the given variant, <code>false</code> otherwise
-     */
-    default boolean isSupported(Variant variant) {
-        return variant==Variant.STANDARD;
-    }
 }

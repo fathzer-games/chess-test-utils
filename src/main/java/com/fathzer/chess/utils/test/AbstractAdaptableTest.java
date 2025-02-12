@@ -1,11 +1,15 @@
 package com.fathzer.chess.utils.test;
 
+import static com.fathzer.chess.utils.model.Variant.STANDARD;
+
+import java.util.Arrays;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 import com.fathzer.chess.utils.model.IBoard;
 import com.fathzer.chess.utils.model.TestAdapter;
 import com.fathzer.chess.utils.model.Variant;
+import com.fathzer.chess.utils.test.helper.Supports;
 
 /** An abstract test class that requires a {@link TestAdapter}.
  * @param <B> the type of the board
@@ -67,6 +71,8 @@ public abstract class AbstractAdaptableTest<B extends IBoard<M>, M> {
      * @see TestAdapter#isSupported(Variant)
      */
     public boolean isSupported(Variant variant) {
-        return u.isSupported(variant);
+        if (variant==STANDARD) return true;
+        final Supports supports = u.getClass().getAnnotation(Supports.class);
+        return supports!=null && Arrays.asList(supports.value()).contains(variant);
     }
 }
