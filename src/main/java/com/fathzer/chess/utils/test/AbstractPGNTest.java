@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import com.fathzer.chess.utils.model.IBoard;
 import com.fathzer.chess.utils.model.Variant;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /** An test class for <a href="https://en.wikipedia.org/wiki/Portable_Game_Notation">PGN</a> builder.
@@ -121,7 +120,7 @@ public abstract class AbstractPGNTest<B extends IBoard<M>, M> extends AbstractAd
 
     private void addMoves(B board, String[] uciMoves) {
         for (String mv:uciMoves) {
-            board.makeMove(u.legalMove(board, mv));
+            board.makeMove(u.move(board, mv));
         }
     }
 

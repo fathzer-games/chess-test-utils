@@ -44,17 +44,18 @@ public abstract class AbstractSANTest<B extends IBoard<M>, M> extends AbstractAd
      * <br>The default implementation asserts an {@link IllegalArgumentException} is thrown if the move is illegal.
      * <br>Subclasses may override this method to change the behavior if your library handles illegal moves differently.
      * @param converter the test SAN converter
-     * @param move the move to convert
+     * @param move the move to convert, expressed in uci format
      * @param board the board the move is played on
      */
-    protected void checkIllegalMove(SANConverter<B, M> converter, M move, B board) {
+    protected void checkIllegalMove(SANConverter<B, M> converter, String uciMove, B board) {
+    	final M move = u.move(board, uciMove);
         assertThrows(IllegalArgumentException.class, () -> converter.getSAN(move, board));
     }
 
     private void testSAN(String fen, String uciMove, String expectedSan) {
         final SANConverter<B, M> converter = getSANConverter();
         final B board = u.fenToBoard(fen, STANDARD);
-        assertEquals(expectedSan, converter.getSAN(u.legalMove(board, uciMove), board));
+        assertEquals(expectedSan, converter.getSAN(u.move(board, uciMove), board));
     }
 
     @Test
@@ -125,13 +126,13 @@ public abstract class AbstractSANTest<B extends IBoard<M>, M> extends AbstractAd
     @Test
     @Tag("IllegalMove")
     void catchOwnPiece() {
-    	checkIllegalMove(getSANConverter(), u.move("f3g2"), u.fenToBoard("2kr3r/pppppppp/8/R7/2P1Q3/1P3K2/2PP2PP/RNB1Q2Q w - - 0 1", STANDARD));
+    	checkIllegalMove(getSANConverter(), "f3g2", u.fenToBoard("2kr3r/pppppppp/8/R7/2P1Q3/1P3K2/2PP2PP/RNB1Q2Q w - - 0 1", STANDARD));
     }
 
     @Test
     @Tag("IllegalMove")
     void rookPromotion() {
-    	checkIllegalMove(getSANConverter(), u.move("a7a8q"), u.fenToBoard("2kr3r/Rppppppp/8/8/2P1Q2Q/1P3K2/2PP2PP/RNB4Q w - - 0 1", STANDARD));
+    	checkIllegalMove(getSANConverter(), "a7a8q", u.fenToBoard("2kr3r/Rppppppp/8/8/2P1Q2Q/1P3K2/2PP2PP/RNB4Q w - - 0 1", STANDARD));
     }
 
     @Test
