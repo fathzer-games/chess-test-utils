@@ -33,8 +33,37 @@ Usually a board implementation is straight-forward because its methods are proba
 Here is an example based on [chesslib](https://github.com/bhlangonijr/chesslib):
 
 ```java
-class ChessLibBoard implements IBoard<Move> {
-    //TODO
+import java.util.List;
+
+import com.fathzer.chess.utils.model.IBoard;
+import com.github.bhlangonijr.chesslib.Board;
+import com.github.bhlangonijr.chesslib.move.Move;
+
+public class ChessLibBoard implements IBoard<Move>{
+	private final Board board;
+
+	public ChessLibBoard(Board board) {
+		this.board = board;
+	}
+	
+	@Override
+	public List<Move> getMoves() {
+		return board.pseudoLegalMoves();
+	}
+
+	@Override
+	public boolean makeMove(Move mv) {
+		return board.doMove(mv);
+	}
+
+	@Override
+	public void unmakeMove() {
+		board.undoMove();
+	}
+
+	public Board getBoard() {
+		return board;
+	}
 }
 ```
 
@@ -42,7 +71,38 @@ The subclass of `TestAdapter` should also be very simple.
 Here is an example also based on [chesslib](https://github.com/bhlangonijr/chesslib):
 ```java
 class ChessLibTestAdapter extends TestAdapter<ChessLibBoard, Move> {
-    //TODO
+import com.fathzer.chess.utils.model.TestAdapter;
+import com.fathzer.chess.utils.model.Variant;
+import com.github.bhlangonijr.chesslib.Board;
+import com.github.bhlangonijr.chesslib.Piece;
+import com.github.bhlangonijr.chesslib.Side;
+import com.github.bhlangonijr.chesslib.Square;
+import com.github.bhlangonijr.chesslib.move.Move;
+
+public class ChessLibAdapter implements TestAdapter<ChessLibBoard, Move> {
+
+	@Override
+	public ChessLibBoard fenToBoard(String fen, Variant variant) {
+		final Board internalBoard = new Board();
+		internalBoard.loadFromFen(fen);
+		return new ChessLibBoard(internalBoard);
+	}
+
+	@Override
+	public Move move(ChessLibBoard board, String uciMove) {
+		final String from = uciMove.substring(0, 2);
+		final String to = uciMove.substring(2, 4);
+		final String promotion = uciMove.length()>4 ? uciMove.substring(4, 5) : null;
+		Piece p = null;
+		if (promotion!=null) {
+			// Warning the promotion code is always in lowercase in UCI
+			final String notation = board.getBoard().getSideToMove()==Side.WHITE ? promotion.toUpperCase() : promotion;
+			p = Piece.fromFenSymbol(notation);
+		} else {
+			p = Piece.NONE;
+		}
+		return new Move(Square.fromValue(from.toUpperCase()), Square.fromValue(to.toUpperCase()), p);
+	}
 }
 ```
 If your chess library supports [Chess960](https://en.wikipedia.org/wiki/Chess960), please override the `isSupported(Variant)` as in this example.
