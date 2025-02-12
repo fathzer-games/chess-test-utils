@@ -65,10 +65,10 @@ public abstract class AbstractAdaptableTest<B extends IBoard<M>, M> {
     }
 
     /** Checks if a variant is supported by the current adapter.
-     * <br>By default, this method calls the {@link TestAdapter#isSupported(Variant)} method.
+     * <br>By default, this method returns true if variant is {@link Variant#STANDARD}, otherwise, it checks if the {@link TestAdapter} has
+     * a {@link Supports} annotation that contains the variant.
      * @param variant The variant to test
      * @return <code>true</code> if the variant is supported, <code>false</code> otherwise
-     * @see TestAdapter#isSupported(Variant)
      */
     public boolean isSupported(Variant variant) {
         if (variant==STANDARD) return true;

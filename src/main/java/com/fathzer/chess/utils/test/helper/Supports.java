@@ -7,6 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import com.fathzer.chess.utils.model.TestAdapter;
 import com.fathzer.chess.utils.model.Variant;
 
 /** An annotation that lists supported chess variants.

@@ -45,6 +45,12 @@ public interface IBoard<M> {
 	 */
 	int getPiece(String algebraicNotation);
 
+	/** Checks if the given move is legal.
+	 * <br>By default, this method returns true if the move is a move returned by {@link #getMoves()} and @link #makeMove(Object)} returns true.
+	 * <br><b>Warning</b>: this method requires that the <code>equals</code> method is overridden to return true for moves are equivalent.
+	 * @param move The move to check
+	 * @return true if the move is legal, false otherwise
+	 */
     default boolean isLegal(M move) {
     	final boolean pseudoLegal = getMoves().stream().anyMatch(m -> m.equals(move));
     	if (pseudoLegal) {
