@@ -5,20 +5,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.fathzer.chess.utils.model.TestAdapter;
-import com.fathzer.chess.utils.model.Variant;
 
-/** An annotation that lists supported chess variants.
- * <br>This annotation should be used to declare a {@link TestAdapter} supports non standard variants.
+/** An annotation that lists the required interfaces of the underlying {@link TestAdapter}
+ * <br>This annotation should be used in tests that requires a {@link TestAdapter} to support additional interface.
 */
 @Target( TYPE )
 @Retention(RUNTIME)
-@ExtendWith(ExcludeMethodsCondition.class) //TODO Not sure this line is useful
-public @interface Supports {
+public @interface Requires {
 	/** Gets the supported variants.
 	 * @return methods names
 	 */
-	Variant[] value();
+	Class<?>[] value();
 }

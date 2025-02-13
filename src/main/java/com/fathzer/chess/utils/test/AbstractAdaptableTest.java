@@ -9,6 +9,7 @@ import java.util.ServiceLoader;
 import com.fathzer.chess.utils.model.IBoard;
 import com.fathzer.chess.utils.model.TestAdapter;
 import com.fathzer.chess.utils.model.Variant;
+import com.fathzer.chess.utils.test.helper.Requires;
 import com.fathzer.chess.utils.test.helper.Supports;
 
 /** An abstract test class that requires a {@link TestAdapter}.
@@ -43,6 +44,14 @@ public abstract class AbstractAdaptableTest<B extends IBoard<M>, M> {
 	 */
 	protected AbstractAdaptableTest() {
 		u = getAdapter();
+		final Requires requires = getClass().getAnnotation(Requires.class);
+		if (requires!=null) {
+			for (Class<?> requiredInterface : requires.value()) {
+				if (!requiredInterface.isAssignableFrom(u.getClass())) {
+					throw new IllegalStateException(String.format("%s class requires that %s adapter implements %s)",getClass(), u.getClass(), requiredInterface));
+				}
+			}
+		}
 	}
 
 	/** Gets the {@link TestAdapter} to use for this tests.

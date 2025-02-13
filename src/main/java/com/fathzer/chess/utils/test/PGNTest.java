@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import com.fathzer.chess.utils.model.IBoard;
 import com.fathzer.chess.utils.model.Variant;
+import com.fathzer.chess.utils.test.helper.Requires;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,19 @@ import org.junit.jupiter.api.Test;
  * @param <B> the type of the board
  * @param <M> the type of the move
  */
-public abstract class AbstractPGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M> {
+@Requires(PGNTest.PGNConverter.class)
+public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M> {
+	
+	/** A converter from a board to its PGN representation */
+	@FunctionalInterface
+	public interface PGNConverter<B> {
+		/** Gets the PGN representation of the given board
+		 * @param board the board
+		 * @return the PGN representation of the given board
+		*/
+		String toPGN(B board);
+	}
+	
 	/** The moves, in UCI format, of the famous Lasker vs Thomas, 1912 game */
 	protected static final String FATAL_ATTRACTION_MOVES = "d2d4 e7e6 g1f3 f7f5 b1c3 g8f6 c1g5 f8e7 g5f6 e7f6 e2e4"
 			+ " f5e4 c3e4 b7b6 f3e5 e8g8 f1d3 c8b7 d1h5 d8e7 h5h7 g8h7 e4f6 h7h6 e5g4 h6g5 h2h4 g5f4 g2g3 f4f3 d3e2"
@@ -69,7 +82,9 @@ public abstract class AbstractPGNTest<B extends IBoard<M>, M> extends AbstractAd
 	/** Gets the PGN builder to test.
 	 * @return a PGN builder
 	*/
-	protected abstract Function<B, String> getPGNBuilder();
+	protected PGNConverter<B> getPGNBuilder() {
+		return (PGNConverter<B>)u;
+	}
 
 	@Test
 	@IfVariantSupported(Variant.CHESS960)
@@ -79,13 +94,13 @@ public abstract class AbstractPGNTest<B extends IBoard<M>, M> extends AbstractAd
 
 	@Test
 	void testBasicPGN() {
-		Function<B, String> pgnBuilder = getPGNBuilder();
+		PGNConverter<B> pgnBuilder = getPGNBuilder();
 		
 		// Lasker vs Thomas, 1912
 		B board = u.fenToBoard(STANDARD_START_FEN, Variant.STANDARD);
 		addMoves(board, FATAL_ATTRACTION_MOVES.split(" "));
 
-		String pgn = pgnBuilder.apply(board);
+		String pgn = pgnBuilder.toPGN(board);
 		
 		// Check that no lines are bigger that 80 chars
 		String[] lines = pgn.split("\n");

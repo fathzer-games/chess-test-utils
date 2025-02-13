@@ -36,11 +36,15 @@
 
 	<dependencies>
 		<dependency>
-			<!-- This dependency is used to compile the com.fathzer.chess.utils.test package.
-			 But is not intended to be a transitive dependency => It is optional -->
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<version>5.11.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite</artifactId>
+			<version>1.11.4</version>
+			<scope>test</scope>
 		</dependency>
 		<!--dependency>
 			<groupId>com.github.bhlangonijr</groupId>
@@ -55,4 +59,17 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.2</version>
+				<configuration>
+					<test>com.fathzer.chess.utils.test.jchess.TestSuite</test>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

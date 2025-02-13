@@ -13,10 +13,11 @@ import com.fathzer.chess.utils.model.IBoard;
  * @param <B> the type of the board
  * @param <M> the type of the move
  */
-public abstract class AbstractChess960Test<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M> {
+public class Chess960Test<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M> {
 	// Most of the tests in this class are an adaptation of com.kelseyde.calvin.movegen.Chess960Test in https://github.com/kelseyde/calvin-chess-engine/
-
+	
 	@Test
+	@Tag("Chess960Test.rookGoesToKingSquare")
 	void rookGoesToKingSquare() {
 		B board = u.fenToBoard("qnnbrk1r/ppppp1pp/5p2/3b4/3B4/5P2/PPPPP1PP/QNNBRK1R w KQkq - 2 3", CHESS960);
 		M target = u.move(board, "f1h1");

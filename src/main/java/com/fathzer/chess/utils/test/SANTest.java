@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fathzer.chess.utils.model.IBoard;
 import com.fathzer.chess.utils.model.Variant;
+import com.fathzer.chess.utils.test.helper.Requires;
 
 /** A test class for move to [Standard Algebraic Notation (SAN)](https://en.wikipedia.org/wiki/Algebraic_notation_(chess)) notation converter.
  * <br> Please note that there are many variants of the SAN standard, this test class uses the variant used in the PGN standard (for instance no <i>'e.p.'</i> for en passant captures).
@@ -17,8 +18,9 @@ import com.fathzer.chess.utils.model.Variant;
  * @param <B> the type of the board
  * @param <M> the type of the move
 */
-public abstract class AbstractSANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M> {
-
+@Requires(SANTest.SANConverter.class)
+public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M> {
+	
 	/** A class that converts a move to its Standard Algebraic Notation (SAN). */
 	@FunctionalInterface
 	public interface SANConverter<B, M> {
@@ -38,7 +40,9 @@ public abstract class AbstractSANTest<B extends IBoard<M>, M> extends AbstractAd
 	/** Gets the SAN converter to test.
 	 * @return a SAN converter
 	 */
-	protected abstract SANConverter<B, M> getSANConverter();
+	protected SANConverter<B, M> getSANConverter() {
+		return (SANConverter<B, M>)u;
+	}
 
 	/** Checks if illegal moves are handled correctly.
 	 * <br>The default implementation asserts an {@link IllegalArgumentException} is thrown if the move is illegal.
@@ -138,7 +142,7 @@ public abstract class AbstractSANTest<B extends IBoard<M>, M> extends AbstractAd
 	@Test
 	@IfVariantSupported(Variant.CHESS960)
 	@Tag("Chess960")
-	void test() {
+	void test960() {
 		var converter = getSANConverter();
 		// Castling in chess960
 		B board = u.fenToBoard("4k3/8/8/8/8/8/r5q1/4K3 b - - 0 1", CHESS960);
