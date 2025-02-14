@@ -16,8 +16,7 @@ import com.fathzer.chess.utils.test.SANTest;
 @SelectClasses({Chess960Test.class, SANTest.class, PGNTest.class})
 //FIXME
 @ExcludeTags({"Chess960Test.castlingOnStandardStartPosition",
-	"SANTest.chess960Castling",
-	"PGNTest.chess960", "PGNTest.draw", "PGNTest.nonStandardStart"})
+	"PGNTest.chess960", "PGNTest.draw"})
 public class SuiteTest {
 	@BeforeSuite
 	static void before() {

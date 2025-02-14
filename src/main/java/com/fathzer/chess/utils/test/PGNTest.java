@@ -98,26 +98,23 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	@Test
 	@Tag("PGNTest.basic")
 	void basic() {
-		PGNConverter<B> pgnBuilder = getPGNBuilder();
-		
 		// Lasker vs Thomas, 1912
-		B board = u.fenToBoard(STANDARD_START_FEN, Variant.STANDARD);
+		final B board = u.fenToBoard(STANDARD_START_FEN, Variant.STANDARD);
 		addMoves(board, FATAL_ATTRACTION_MOVES.split(" "));
 
-		String pgn = pgnBuilder.toPGN(board);
+		final String pgn = getPGNBuilder().toPGN(board);
 		
 		// Check that no lines are bigger that 80 chars
-		String[] lines = pgn.split("\n");
+		final String[] lines = pgn.split("\n");
 		for (String line : lines) {
 			assertTrue(line.length() <= 80, "Line too long: " + line+" ("+line.length()+">80)");
 		}
 		
-		Content parsed = parse(pgn);
+		final Content parsed = parse(pgn);
 		assertFalse(parsed.tagPairs.containsKey(VARIANT_TAG), "Variant tag found when not expected");
 		assertFalse(parsed.tagPairs.containsKey(FEN_TAG), "FEN tag found when not expected");
 		// Check that mandatory tags are there in the right order
-		String expectedOrderedTags = EVENT_TAG+" "+SITE_TAG+" "+DATE_TAG+" "+ROUND_TAG+" "+WHITE_TAG+" "+BLACK_TAG+" "+RESULT_TAG;
-		assertEquals(expectedOrderedTags, parsed.tagPairs.keySet().stream().collect(Collectors.joining(" ")));
+		assertEquals(SEVEN_TAG_ROSTER_KEYS, parsed.tagPairs.keySet().stream().collect(Collectors.joining(" ")));
 		assertEquals(WHITE_WON, parsed.tagPairs.get(RESULT_TAG), "Wrong result tag");
 		assertEquals("d4 e6 Nf3 f5 Nc3 Nf6 Bg5 Be7 Bxf6 Bxf6 e4 fxe4 Nxe4 b6 Ne5 O-O Bd3 Bb7 Qh5 Qe7 Qxh7+ Kxh7 Nxf6+ Kh6 Neg4+ Kg5 h4+ Kf4 g3+ Kf3 Be2+ Kg2 Rh2+ Kg1 Kd2#",
 				parsed.moves().stream().collect(Collectors.joining(" ")));
@@ -127,8 +124,18 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	@Tag("PGNTest.nonStandardStart")
 	void nonStandardStart() {
 		// Test with draw and non standard start FEN
-		//TODO
-		fail("Not yet implemented");
+		final String fen = "r2qkbnr/ppp2ppp/2npb3/4p3/4P3/2NP1N2/PPP2PPP/R1BQKB1R w KQkq - 0 1";
+		final B board = u.fenToBoard(fen, Variant.STANDARD);
+		board.makeMove(u.move(board, "f1e2"));
+		final String pgn = getPGNBuilder().toPGN(board);
+		final Content parsed = parse(pgn);
+		final String tagPairKeys = parsed.tagPairs.keySet().stream().collect(Collectors.joining(" "));
+		assertTrue(tagPairKeys.startsWith(SEVEN_TAG_ROSTER_KEYS),String.format("PGN does not start with the seven tags roster (it starts with %s)", tagPairKeys));
+		final String actualFEN = parsed.tagPairs.get(FEN_TAG);
+		assertNotNull(actualFEN, "Missing tag "+FEN_TAG);
+		assertEquals(fen, actualFEN, FEN_TAG+" tag value is wrong");
+		
+		assertEquals(PLAYING, parsed.tagPairs().get(RESULT_TAG),RESULT_TAG+" tag value is wrong");
 	}
 	
 	@Test
