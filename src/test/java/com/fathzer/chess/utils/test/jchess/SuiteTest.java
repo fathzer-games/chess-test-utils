@@ -18,7 +18,7 @@ import com.fathzer.chess.utils.test.SANTest;
 @ExcludeTags({"Chess960Test.castlingOnStandardStartPosition",
 	"SANTest.chess960Castling",
 	"PGNTest.chess960", "PGNTest.draw", "PGNTest.nonStandardStart"})
-public class TestSuite {
+public class SuiteTest {
 	@BeforeSuite
 	static void before() {
 		System.out.println("Before suite");

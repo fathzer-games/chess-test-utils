@@ -91,7 +91,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	@Tag("Chess960")
 	@Tag("PGNTest.chess960")
 	void chess960() {
-		fail("Not yet impelmented");
+		fail("Not yet implemented");
 	}
 
 	@Test

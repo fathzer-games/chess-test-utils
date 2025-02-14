@@ -144,7 +144,7 @@ public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	@IfVariantSupported(Variant.CHESS960)
 	@Tag("Chess960")
 	@Tag("SANTest.chess960Castling")
-	void test960Castling() {
+	void chess960Castling() {
 		fail("Not yet implemented");
 	}
 }

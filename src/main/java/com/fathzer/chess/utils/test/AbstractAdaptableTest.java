@@ -55,14 +55,13 @@ public abstract class AbstractAdaptableTest<B extends IBoard<M>, M> {
 	}
 
 	/** Gets the {@link TestAdapter} to use for this tests.
-	 * <br>Default implementation returns an instance of the service class whose name is in
+	 * <br>It returns an instance of the service class whose name is in
 	 * the <code>META-INF/services/com.fathzer.chess.utils.model.TestAdapter</code> resource file.
-	 * <br>If you prefer not to rely on service files, override this method.
 	 * @return the test adapter instance (never null)
 	 * @throws IllegalStateException if the resource file is not found or if the service class can't be loaded.
 	 */
 	@SuppressWarnings("unchecked")
-	protected TestAdapter<B,M> getAdapter() {
+	private TestAdapter<B,M> getAdapter() {
 		if (ADAPTER==null) {
 			if (SERVICE_LOADING_EXCEPTION!=null) {
 				throw new IllegalStateException("Misconfiguration exception. An error occurred while loading the "+SERVICE_RESOURCE+" resource service file", SERVICE_LOADING_EXCEPTION);
