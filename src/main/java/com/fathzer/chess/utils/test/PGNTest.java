@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.fathzer.chess.utils.model.IBoard;
 import com.fathzer.chess.utils.model.Variant;
 import com.fathzer.chess.utils.test.helper.Requires;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /** An abstract test class for <a href="https://en.wikipedia.org/wiki/Portable_Game_Notation">PGN</a> builder.
@@ -88,12 +88,15 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 
 	@Test
 	@IfVariantSupported(Variant.CHESS960)
-	void test960() {
-		//TODO
+	@Tag("Chess960")
+	@Tag("PGNTest.chess960")
+	void chess960() {
+		fail("Not yet impelmented");
 	}
 
 	@Test
-	void testBasicPGN() {
+	@Tag("PGNTest.basic")
+	void basic() {
 		PGNConverter<B> pgnBuilder = getPGNBuilder();
 		
 		// Lasker vs Thomas, 1912
@@ -120,14 +123,16 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	}
 	
 	@Test
-	void testNonStandardStart() {
+	@Tag("PGNTest.nonStandardStart")
+	void nonStandardStart() {
 		// Test with draw and non standard start FEN
 		//TODO
 		fail("Not yet implemented");
 	}
 	
 	@Test
-	void testDraw() {
+	@Tag("PGNTest.draw")
+	void draw() {
 		// Test with draw and non standard start FEN
 		//TODO
 		fail("Not yet implemented");

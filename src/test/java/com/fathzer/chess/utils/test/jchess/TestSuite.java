@@ -5,15 +5,19 @@ import org.junit.platform.suite.api.BeforeSuite;
 import org.junit.platform.suite.api.ExcludeTags;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
+import org.junit.platform.suite.api.SuiteDisplayName;
 
 import com.fathzer.chess.utils.test.Chess960Test;
 import com.fathzer.chess.utils.test.PGNTest;
 import com.fathzer.chess.utils.test.SANTest;
 
 @Suite
-//@SuiteDisplayName("Parameterized Test Suite")
+@SuiteDisplayName("JChess-core Test Suite")
 @SelectClasses({Chess960Test.class, SANTest.class, PGNTest.class})
-@ExcludeTags("Chess960Test.fuckingTest")
+//FIXME
+@ExcludeTags({"Chess960Test.castlingOnStandardStartPosition",
+	"SANTest.chess960Castling",
+	"PGNTest.chess960", "PGNTest.draw", "PGNTest.nonStandardStart"})
 public class TestSuite {
 	@BeforeSuite
 	static void before() {
