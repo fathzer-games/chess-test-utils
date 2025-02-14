@@ -82,6 +82,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	/** Gets the PGN builder to test.
 	 * @return a PGN builder
 	*/
+	@SuppressWarnings("unchecked")
 	protected PGNConverter<B> getPGNBuilder() {
 		return (PGNConverter<B>)u;
 	}

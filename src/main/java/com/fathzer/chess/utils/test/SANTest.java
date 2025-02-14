@@ -40,6 +40,7 @@ public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	/** Gets the SAN converter to test.
 	 * @return a SAN converter
 	 */
+	@SuppressWarnings("unchecked")
 	protected SANConverter<B, M> getSANConverter() {
 		return (SANConverter<B, M>)u;
 	}
@@ -57,8 +58,12 @@ public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	}
 
 	private void testSAN(String fen, String uciMove, String expectedSan) {
+		testSAN(fen, STANDARD, uciMove, expectedSan);
+	}
+
+	private void testSAN(String fen, Variant variant, String uciMove, String expectedSan) {
 		final SANConverter<B, M> converter = getSANConverter();
-		final B board = u.fenToBoard(fen, STANDARD);
+		final B board = u.fenToBoard(fen, variant);
 		assertEquals(expectedSan, converter.getSAN(u.move(board, uciMove), board));
 	}
 
@@ -145,6 +150,7 @@ public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	@Tag("Chess960")
 	@Tag("SANTest.chess960Castling")
 	void chess960Castling() {
-		fail("Not yet implemented");
+		testSAN("nrk1brnb/pp1ppppp/1q6/2p5/3P4/1NBQ1N2/1PP1PPPP/1RK2R1B w KQkq - 2 10", CHESS960, "c1b1", "O-O-O");
+		testSAN("nrk1bbnr/pp1ppppp/1q6/2p5/3P4/1NBQ1NB1/1PP1PPPP/1RK4R w KQkq - 2 10", CHESS960, "c1h1","O-O");
 	}
 }
