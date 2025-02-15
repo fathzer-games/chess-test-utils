@@ -1,8 +1,5 @@
 package com.fathzer.chess.utils.test.jchess;
 
-import org.junit.platform.suite.api.AfterSuite;
-import org.junit.platform.suite.api.BeforeSuite;
-import org.junit.platform.suite.api.ExcludeTags;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
@@ -14,17 +11,7 @@ import com.fathzer.chess.utils.test.SANTest;
 @Suite
 @SuiteDisplayName("JChess-core Test Suite")
 @SelectClasses({Chess960Test.class, SANTest.class, PGNTest.class})
-//FIXME
-@ExcludeTags({"Chess960Test.castlingOnStandardStartPosition",
-	"PGNTest.chess960", "PGNTest.draw"})
+//Prevent Sonar to complain about empty test class
+@SuppressWarnings("java:S2187")
 public class SuiteTest {
-	@BeforeSuite
-	static void before() {
-		System.out.println("Before suite");
-	}
-
-	@AfterSuite
-	static void after() {
-		System.out.println("After suite");
-	}
 }

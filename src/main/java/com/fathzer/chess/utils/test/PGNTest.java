@@ -78,138 +78,182 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	protected static final String DRAW = "1/2-1/2";
 	/** The value of the PGN result tag when the game is still playing */
 	protected static final String PLAYING = "*";
-
-	/** Gets the PGN builder to test.
-	 * @return a PGN builder
-	*/
-	@SuppressWarnings("unchecked")
-	protected PGNConverter<B> getPGNBuilder() {
-		return (PGNConverter<B>)u;
-	}
-
-	@Test
-	@IfVariantSupported(Variant.CHESS960)
-	@Tag("Chess960")
-	@Tag("PGNTest.chess960")
-	void chess960() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Tag("PGNTest.basic")
-	void basic() {
-		// Lasker vs Thomas, 1912
-		final B board = u.fenToBoard(STANDARD_START_FEN, Variant.STANDARD);
-		addMoves(board, FATAL_ATTRACTION_MOVES.split(" "));
-
-		final String pgn = getPGNBuilder().toPGN(board);
-		
-		// Check that no lines are bigger that 80 chars
-		final String[] lines = pgn.split("\n");
-		for (String line : lines) {
-			assertTrue(line.length() <= 80, "Line too long: " + line+" ("+line.length()+">80)");
+	
+		private static final int MAX_LINE_LENGTH = 80;
+	
+		/** Gets the PGN builder to test.
+		 * @return a PGN builder
+		*/
+		@SuppressWarnings("unchecked")
+		protected PGNConverter<B> getPGNBuilder() {
+			return (PGNConverter<B>)u;
+		}
+	
+		@Test
+		@IfVariantSupported(Variant.CHESS960)
+		@Tag("Chess960")
+		@Tag("PGNTest.chess960")
+		void chess960() {
+			// Test with draw and non standard start FEN
+			final String fen = "2r1k3/pp2pppp/2q5/8/1P6/8/4P3/3KR3 b q - 0 1"; //Change to black winning position
+			final B board = u.fenToBoard(fen, Variant.CHESS960);
+			assertTrue(board.makeMove(u.move(board, "e8c8")));
+			final String pgn = getPGNBuilder().toPGN(board);
+			final Content parsed = parse(pgn);
+			checkMadatoryTags(Variant.CHESS960, parsed, fen, BLACK_WON);
 		}
 		
-		final Content parsed = parse(pgn);
-		assertFalse(parsed.tagPairs.containsKey(VARIANT_TAG), "Variant tag found when not expected");
-		assertFalse(parsed.tagPairs.containsKey(FEN_TAG), "FEN tag found when not expected");
-		// Check that mandatory tags are there in the right order
-		assertEquals(SEVEN_TAG_ROSTER_KEYS, parsed.tagPairs.keySet().stream().collect(Collectors.joining(" ")));
-		assertEquals(WHITE_WON, parsed.tagPairs.get(RESULT_TAG), "Wrong result tag");
-		assertEquals("d4 e6 Nf3 f5 Nc3 Nf6 Bg5 Be7 Bxf6 Bxf6 e4 fxe4 Nxe4 b6 Ne5 O-O Bd3 Bb7 Qh5 Qe7 Qxh7+ Kxh7 Nxf6+ Kh6 Neg4+ Kg5 h4+ Kf4 g3+ Kf3 Be2+ Kg2 Rh2+ Kg1 Kd2#",
-				parsed.moves().stream().collect(Collectors.joining(" ")));
-	}
+		private void checkMadatoryTags(Variant variant, Content parsed, String expectedFEN, String expectedResult) {
+			// Check that mandatory tags are there in the right order
+			final String tagPairKeys = parsed.tagPairs().keySet().stream().collect(Collectors.joining(" "));
+			assertTrue(tagPairKeys.startsWith(SEVEN_TAG_ROSTER_KEYS),String.format("PGN does not start with the seven tags roster (it starts with %s)", tagPairKeys));
+			assertEquals(expectedResult, parsed.tagPairs().get(RESULT_TAG),RESULT_TAG+" tag value is wrong");
 	
-	@Test
-	@Tag("PGNTest.nonStandardStart")
-	void nonStandardStart() {
-		// Test with draw and non standard start FEN
-		final String fen = "r2qkbnr/ppp2ppp/2npb3/4p3/4P3/2NP1N2/PPP2PPP/R1BQKB1R w KQkq - 0 1";
-		final B board = u.fenToBoard(fen, Variant.STANDARD);
-		board.makeMove(u.move(board, "f1e2"));
-		final String pgn = getPGNBuilder().toPGN(board);
-		final Content parsed = parse(pgn);
-		final String tagPairKeys = parsed.tagPairs.keySet().stream().collect(Collectors.joining(" "));
-		assertTrue(tagPairKeys.startsWith(SEVEN_TAG_ROSTER_KEYS),String.format("PGN does not start with the seven tags roster (it starts with %s)", tagPairKeys));
-		final String actualFEN = parsed.tagPairs.get(FEN_TAG);
-		assertNotNull(actualFEN, "Missing tag "+FEN_TAG);
-		assertEquals(fen, actualFEN, FEN_TAG+" tag value is wrong");
-		
-		assertEquals(PLAYING, parsed.tagPairs().get(RESULT_TAG),RESULT_TAG+" tag value is wrong");
-	}
-	
-	@Test
-	@Tag("PGNTest.draw")
-	void draw() {
-		// Test with draw and non standard start FEN
-		//TODO
-		fail("Not yet implemented");
-	}
-
-	private void addMoves(B board, String[] uciMoves) {
-		for (String mv:uciMoves) {
-			board.makeMove(u.move(board, mv));
-		}
-	}
-
-	/** The content of a PGN 
-	 * @param tagPairs the tag pairs of the parsed PGN.
-	 * @param moves the move list of the PGN
-	*/
-	protected record Content(Map<String, String> tagPairs, List<String> moves) {}
- 
-	/** Parses a PGN string into a Content record.
-	 * @param pgn the PGN string to parse
-	 * @return a Content record with the parsed data
-	 * @throws IllegalArgumentException if the PGN string is not valid
-	 */
-	protected Content parse(String pgn) {
-		final String[] lines = pgn.split("\n");
-		final Map<String, String> tagPairs = new LinkedHashMap<>();
-		final List<String> moves = new ArrayList<>();
-		boolean emptySeparatorLine = false;
-		for (String line : lines) {
-			if (line.startsWith("[") && line.endsWith("]")) {
-				if (emptySeparatorLine) {
-					throw new IllegalArgumentException("There is a 'tag pairs - move list' separator empty line in the tag pairs section");
-				}
-				line = line.substring(1, line.length() - 1);
-				final int index = line.indexOf(' ');
-				if (index == -1 || index == line.length() - 1) {
-					throw new IllegalArgumentException("Invalid tag: " + line);
-				}
-				final String name = line.substring(0, index);
-				final String value = line.substring(index + 1);
-				if (name.isBlank() || value.isBlank() || value.charAt(0) != '"' || value.charAt(value.length() - 1) != '"') {
-					throw new IllegalArgumentException("Invalid tag: " + line);
-				}
-				tagPairs.put(name, value.substring(1, value.length() - 1));
-				emptySeparatorLine = false;
-			} else if (!line.isEmpty()) {
-				// A move line
-				if (!emptySeparatorLine) {
-					throw new IllegalArgumentException("'tag pairs - move list' separator empty line is missing");
-				}
-				parseMoves(moves, line.split(" "));
+			// Check variant tag
+			String actualVariant = parsed.tagPairs.get(VARIANT_TAG);
+			if (variant==Variant.CHESS960) {
+				assertNotNull(actualVariant, "Missing "+VARIANT_TAG+" tag");
+				assertEquals(actualVariant, actualVariant, VARIANT_TAG+" tag value is wrong");
 			} else {
-				if (emptySeparatorLine) {
-					throw new IllegalArgumentException("There are more than one 'tag pairs - move list' separator empty lines");
+				assertNull(actualVariant, "Should not have "+VARIANT_TAG+" tag");
+			}
+			
+			// Check FEN tag
+			final String actualFEN = parsed.tagPairs.get(FEN_TAG);
+			if (expectedFEN!=null) {
+				assertNotNull(actualFEN, "Missing "+FEN_TAG+" tag");
+				assertFen(expectedFEN, actualFEN);
+			} else {
+				assertNull(actualFEN, "Should not have "+FEN_TAG+" tag");
+			}
+		}
+	
+		@Test
+		@Tag("PGNTest.basic")
+		void basic() {
+			// Lasker vs Thomas, 1912
+			final B board = u.fenToBoard(STANDARD_START_FEN, Variant.STANDARD);
+			addMoves(board, FATAL_ATTRACTION_MOVES.split(" "));
+	
+			final String pgn = getPGNBuilder().toPGN(board);
+			
+			final Content parsed = parse(pgn);
+			checkMadatoryTags(Variant.STANDARD, parsed, null, WHITE_WON);
+			assertEquals(7, parsed.tagPairs().size(),"Unexpected extra tags "+parsed.tagPairs());
+			
+			assertEquals("d4 e6 Nf3 f5 Nc3 Nf6 Bg5 Be7 Bxf6 Bxf6 e4 fxe4 Nxe4 b6 Ne5 O-O Bd3 Bb7 Qh5 Qe7 Qxh7+ Kxh7 Nxf6+ Kh6 Neg4+ Kg5 h4+ Kf4 g3+ Kf3 Be2+ Kg2 Rh2+ Kg1 Kd2#",
+					parsed.moves().stream().collect(Collectors.joining(" ")));
+		}
+		
+		@Test
+		@Tag("PGNTest.nonStandardStart")
+		void nonStandardStart() {
+			// Test with draw and non standard start FEN
+			final String fen = "r2qkbnr/ppp2ppp/2npb3/4p3/4P3/2NP1N2/PPP2PPP/R1BQKB1R w KQkq - 0 1";
+			final B board = u.fenToBoard(fen, Variant.STANDARD);
+			board.makeMove(u.move(board, "f1e2"));
+			final String pgn = getPGNBuilder().toPGN(board);
+			final Content parsed = parse(pgn);
+			checkMadatoryTags(Variant.STANDARD, parsed, fen, PLAYING);
+		}
+		
+		@Test
+		@Tag("PGNTest.draw")
+		void draw() {
+			// Test with draw and non standard start FEN
+			final String fen = "1k6/8/K1Q5/8/8/8/8/8 b - - 0 1";
+			final B board = u.fenToBoard(fen, Variant.STANDARD);
+			final String pgn = getPGNBuilder().toPGN(board);
+			final Content parsed = parse(pgn);
+			checkMadatoryTags(Variant.STANDARD, parsed, fen, DRAW);
+		}
+	
+		private void addMoves(B board, String[] uciMoves) {
+			for (String mv:uciMoves) {
+				board.makeMove(u.move(board, mv));
+			}
+		}
+	
+		/** The content of a PGN 
+		 * @param tagPairs the tag pairs of the parsed PGN.
+		 * @param moves the move list of the PGN
+		*/
+		protected record Content(Map<String, String> tagPairs, List<String> moves) {}
+	 
+		/** Parses a PGN string into a Content record.
+		 * @param pgn the PGN string to parse
+		 * @return a Content record with the parsed data
+		 * @throws IllegalArgumentException if the PGN string is not valid
+		 */
+		protected Content parse(String pgn) {
+			final String[] lines = pgn.split("\n");
+			final Map<String, String> tagPairs = new LinkedHashMap<>();
+			final List<String> moves = new ArrayList<>();
+			boolean emptySeparatorLine = false;
+			for (String line : lines) {
+				// Check that no lines are bigger that 80 chars
+				assertLineLength(line);
+				if (line.startsWith("[") && line.endsWith("]")) {
+					if (emptySeparatorLine) {
+						throw new IllegalArgumentException("There is a 'tag pairs - move list' separator empty line in the tag pairs section");
+					}
+					line = line.substring(1, line.length() - 1);
+					final int index = line.indexOf(' ');
+					if (index == -1 || index == line.length() - 1) {
+						throw new IllegalArgumentException("Invalid tag: " + line);
+					}
+					final String name = line.substring(0, index);
+					final String value = line.substring(index + 1);
+					if (name.isBlank() || value.isBlank() || value.charAt(0) != '"' || value.charAt(value.length() - 1) != '"') {
+						throw new IllegalArgumentException("Invalid tag: " + line);
+					}
+					tagPairs.put(name, value.substring(1, value.length() - 1));
+					emptySeparatorLine = false;
+				} else if (!line.isEmpty()) {
+					// A move line
+					if (!emptySeparatorLine) {
+						throw new IllegalArgumentException("'tag pairs - move list' separator empty line is missing");
+					}
+					parseMoves(moves, line.split(" "));
+				} else {
+					if (emptySeparatorLine) {
+						throw new IllegalArgumentException("There are more than one 'tag pairs - move list' separator empty lines");
+					}
+					emptySeparatorLine = true;
 				}
-				emptySeparatorLine = true;
+			}
+			return new Content(tagPairs, moves);
+		}
+	
+		/** Parses a partial moves list and add them to a given list.
+		 * @param moves the list to fill
+		 * @param tokens the tokens to parse
+		 */
+		protected void parseMoves(List<String> moves, String[] tokens) {
+			for (String token : tokens) {
+				if (!token.isEmpty() && !token.endsWith(".")) {
+					moves.add(token);
+				}
 			}
 		}
-		return new Content(tagPairs, moves);
-	}
-
-	/** Parses a partial move list and add it to a given list.
-	 * @param moves the list to fill
-	 * @param tokens the tokens to parse
-	 */
-	protected static void parseMoves(List<String> moves, String[] tokens) {
-		for (String token : tokens) {
-			if (!token.isEmpty() && !token.endsWith(".")) {
-				moves.add(token);
-			}
+	
+		/** Asserts that the FEN tag value is correct
+		 * <br>The default implementation uses {@link #assertEquals(String, String, String)} to check the FEN values.
+		 * <br>Nevertheless, if you need a lenient check (for instance to tolerate deviations on move count or how castling rights are expressed),
+		 * you can override this method.
+		 * @param expectedFEN the expected FEN value
+		 * @param actualFEN the actual FEN value
+		 */
+		protected void assertFen(String expectedFEN, String actualFEN) {
+			assertEquals(expectedFEN, actualFEN, FEN_TAG+" tag value is wrong");
 		}
+	
+		/** Asserts that the line length does not exceed the recommended maximum 80 chars.
+		 * <br>The default implementation uses {@link #assertTrue(boolean, String)} to check the line length.
+		 * <br>Nevertheless, if you prefer not having this check, feel free to override this method.
+		 * @param line the line to check
+		 */
+		protected void assertLineLength(String line) {
+			assertTrue(line.length() <= MAX_LINE_LENGTH, "Line too long: " + line+" ("+line.length()+">"+MAX_LINE_LENGTH+")");
 	}
 }

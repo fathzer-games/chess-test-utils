@@ -30,7 +30,8 @@ public class JChessAdapter implements TestAdapter<JChessBoard, Move>, SANConvert
 
 	@Override
 	public JChessBoard fenToBoard(String fen, Variant variant) {
-		return new JChessBoard(new FENParser(fen).get());
+		com.fathzer.jchess.Variant v = variant==Variant.CHESS960 ? com.fathzer.jchess.Variant.CHESS960 : com.fathzer.jchess.Variant.STANDARD;
+		return new JChessBoard(new FENParser(fen, v).get());
 	}
 
 	@Override
