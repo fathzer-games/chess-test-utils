@@ -20,7 +20,7 @@ import com.fathzer.jchess.pgn.PGNHeaders;
 import com.fathzer.jchess.pgn.PGNWriter;
 
 @Supports(Variant.CHESS960)
-public class JChessAdapter implements TestAdapter<JChessBoard, Move>, SANConverter<JChessBoard, Move>, PGNConverter<JChessBoard> {
+public class JChessAdapter implements TestAdapter<JChessBoard, JChessMove>, SANConverter<JChessBoard, JChessMove>, PGNConverter<JChessBoard> {
 	private static final MoveAlgebraicNotationBuilder sanConverter;
 	
 	static {
@@ -35,7 +35,7 @@ public class JChessAdapter implements TestAdapter<JChessBoard, Move>, SANConvert
 	}
 
 	@Override
-	public Move move(JChessBoard board, String uciMove) {
+	public JChessMove move(JChessBoard board, String uciMove) {
 		final CoordinatesSystem cs = board.getBoard().getCoordinatesSystem();
 		final int from = cs.getIndex(uciMove.substring(0, 2));
 		final int to = cs.getIndex(uciMove.substring(2, 4));
@@ -48,7 +48,7 @@ public class JChessAdapter implements TestAdapter<JChessBoard, Move>, SANConvert
 		} else {
 			piece = null;
 		}
-		return new BasicMove(from, to, piece);
+		return new JChessMove(new BasicMove(from, to, piece), board.getBoard());
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class JChessAdapter implements TestAdapter<JChessBoard, Move>, SANConvert
 	}
 
 	@Override
-	public String getSAN(Move move, JChessBoard board) {
-		return sanConverter.get(board.getBoard(), move);
+	public String getSAN(JChessMove move, JChessBoard board) {
+		return sanConverter.get(board.getBoard(), move.mv);
 	}
 }

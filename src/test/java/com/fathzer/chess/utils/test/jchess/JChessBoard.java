@@ -11,9 +11,9 @@ import com.fathzer.jchess.Board;
 import com.fathzer.jchess.Move;
 import com.fathzer.jchess.Piece;
 
-public class JChessBoard implements IBoard<Move>{
+public class JChessBoard implements IBoard<JChessMove>{
 	private final Board<Move> startBoard;
-	private final Board<Move> board;
+	public final Board<Move> board;
 	private final List<Move> moves;
 
 	public JChessBoard(Board<Move> board) {
@@ -23,15 +23,15 @@ public class JChessBoard implements IBoard<Move>{
 	}
 	
 	@Override
-	public List<Move> getMoves() {
-		return board.getMoves();
+	public List<JChessMove> getMoves() {
+		return board.getMoves().stream().map(m -> new JChessMove(m, this.board)).toList();
 	}
 
 	@Override
-	public boolean makeMove(Move mv) {
-		final boolean isValid = board.makeMove(mv, MoveConfidence.UNSAFE);
+	public boolean makeMove(JChessMove mv) {
+		final boolean isValid = board.makeMove(mv.mv, MoveConfidence.UNSAFE);
 		if (isValid) {
-			moves.add(mv);
+			moves.add(mv.mv);
 		}
 		return isValid;
 	}
@@ -63,5 +63,10 @@ public class JChessBoard implements IBoard<Move>{
 			int result = (piece.ordinal()+1)/2;
 			return Color.WHITE==piece.getColor() ? result : -result; 
 		}
+	}
+
+	@Override
+	public String toString() {
+		return board.toString();
 	}
 }
