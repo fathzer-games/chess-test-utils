@@ -60,6 +60,6 @@ public class JChessAdapter implements TestAdapter<JChessBoard, JChessMove>, SANC
 
 	@Override
 	public String getSAN(JChessMove move, JChessBoard board) {
-		return sanConverter.get(board.getBoard(), move.mv);
+		return sanConverter.get(board.getBoard(), move);
 	}
 }

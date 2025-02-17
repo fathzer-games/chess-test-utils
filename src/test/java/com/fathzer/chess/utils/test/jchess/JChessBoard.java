@@ -29,9 +29,9 @@ public class JChessBoard implements IBoard<JChessMove>{
 
 	@Override
 	public boolean makeMove(JChessMove mv) {
-		final boolean isValid = board.makeMove(mv.mv, MoveConfidence.UNSAFE);
+		final boolean isValid = board.makeMove(mv, MoveConfidence.UNSAFE);
 		if (isValid) {
-			moves.add(mv.mv);
+			moves.add(mv);
 		}
 		return isValid;
 	}

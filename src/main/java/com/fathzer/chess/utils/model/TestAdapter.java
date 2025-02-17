@@ -21,4 +21,13 @@ public interface TestAdapter<B extends IBoard<M>, M> {
 	 * @return a move instance.
 	 */
 	M move(B board, String uciMove);
+	
+	/**
+	 * Converts a move to its UCI representation.
+	 * @param move the move to convert
+	 * @return the UCI representation of the move
+	 */
+	default String toUCI(B board, M move) {
+		return move.toString();
+	}
 }
