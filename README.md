@@ -103,13 +103,6 @@ public class ChessLibAdapter implements TestAdapter<ChessLibBoard, Move> {
 		}
 		return new Move(Square.fromValue(from.toUpperCase()), Square.fromValue(to.toUpperCase()), p);
 	}
-	
-	
-	@Override
-	public int getPiece(String algebraicNotation) {
-	   //TODO
-	   return 0;
-	}
 }
 ```
 If your chess library supports [Chess960](https://en.wikipedia.org/wiki/Chess960), add the `@Supports(Variant.Chess960)` to the class.
@@ -121,7 +114,7 @@ If your chess library supports [Chess960](https://en.wikipedia.org/wiki/Chess960
     }
 ```
 
-Last thing: The adapter is automatically registered using the [java service loader](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) mechanism.
+Last thing: The adapter is discovered using the [java service loader](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) mechanism.
 You have to create a resource file named `com.fathzer.chess.utils.model.TestAdapter` file in the `/src/test/resources/META-INF/services/` directory of your project with the following content (assuming your adapter class name is `com.mylib.ChessLibTestAdapter`):
 `com.mylib.ChessLibTestAdapter`
 
@@ -137,3 +130,5 @@ Let suppose you have a class that converts a chess move to [Standard Algebraic N
 ## Available tests
 
 ## Advanced usage - Filtering tests
+// TODO
+@ExcludeTags

@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fathzer.chess.utils.model.IBoard;
-import com.fathzer.games.Color;
 import com.fathzer.games.GameHistory;
 import com.fathzer.games.MoveGenerator.MoveConfidence;
 import com.fathzer.jchess.Board;
 import com.fathzer.jchess.Move;
-import com.fathzer.jchess.Piece;
 
 public class JChessBoard implements IBoard<JChessMove>{
 	private final Board<Move> startBoard;
@@ -52,17 +50,6 @@ public class JChessBoard implements IBoard<JChessMove>{
 			history.add(mv);
 		}
 		return history;
-	}
-
-	@Override
-	public int getPiece(String algebraicNotation) {
-		final Piece piece = board.getPiece(board.getCoordinatesSystem().getIndex(algebraicNotation));
-		if (piece==null) {
-			return 0;
-		} else {
-			int result = (piece.ordinal()+1)/2;
-			return Color.WHITE==piece.getColor() ? result : -result; 
-		}
 	}
 
 	@Override

@@ -3,8 +3,6 @@ package com.fathzer.chess.utils.test;
 import static com.fathzer.chess.utils.model.Variant.STANDARD;
 
 import java.util.Arrays;
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
 
 import com.fathzer.chess.utils.model.IBoard;
 import com.fathzer.chess.utils.model.TestAdapter;
@@ -20,56 +18,38 @@ public abstract class AbstractAdaptableTest<B extends IBoard<M>, M> {
 	/** The standard start position expressed in FEN */
 	public static final String STANDARD_START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-	private static final TestAdapter<?,?> ADAPTER;
-	private static final ServiceConfigurationError SERVICE_LOADING_EXCEPTION;
-	private static final String SERVICE_RESOURCE = "META-INF/services/"+TestAdapter.class;
-	
-	static {
-		TestAdapter<?,?> service = null;
-		ServiceConfigurationError serviceLoadingException = null;
-		try {
-			service = ServiceLoader.load(TestAdapter.class).findFirst().orElse(null);
-		} catch (ServiceConfigurationError e) {
-			serviceLoadingException = e;
-		}
-		ADAPTER = service;
-		SERVICE_LOADING_EXCEPTION = serviceLoadingException;
-	}
+	private static final AdapterLoader ADAPTER_LOADER = new AdapterLoader();
 	
 	/** The test adapter to use for the tests */
-	protected TestAdapter<B, M> u;
+	protected TestAdapter<B, M> adapter;
 	
 	/** Creates a new instance.
-	 * @throws IllegalStateException if the resource file is not found or if the service class can't be loaded.
+	 * @throws IllegalStateException if the adapter can't be created. This adapter is created by calling {@link #getAdapter()}.
+	 * @see #getAdapter()	
 	 */
 	protected AbstractAdaptableTest() {
-		u = getAdapter();
+		adapter = getAdapter();
 		final Requires requires = getClass().getAnnotation(Requires.class);
 		if (requires!=null) {
 			for (Class<?> requiredInterface : requires.value()) {
-				if (!requiredInterface.isAssignableFrom(u.getClass())) {
-					throw new IllegalStateException(String.format("%s class requires that %s adapter implements %s)",getClass(), u.getClass(), requiredInterface));
+				if (!requiredInterface.isAssignableFrom(adapter.getClass())) {
+					throw new IllegalStateException(String.format("%s class requires that %s adapter implements %s)",getClass(), adapter.getClass(), requiredInterface));
 				}
 			}
 		}
 	}
 
 	/** Gets the {@link TestAdapter} to use for this tests.
-	 * <br>It returns an instance of the service class whose name is in
-	 * the <code>META-INF/services/com.fathzer.chess.utils.model.TestAdapter</code> resource file.
+	 * <br>The default implementation loads the class whose name is in the `chess-test-utils.adapter` system property,
+	 * if that property is set.
+	 * <br>If it is not set, it loads the adapter from the service loader (The service loader take the adapter class name in
+	 * the <code>META-INF/services/com.fathzer.chess.utils.model.TestAdapter</code> resource file).
+	 * <br>You can override this method to provide a different way to load the adapter.
 	 * @return the test adapter instance (never null)
 	 * @throws IllegalStateException if the resource file is not found or if the service class can't be loaded.
 	 */
-	@SuppressWarnings("unchecked")
-	private TestAdapter<B,M> getAdapter() {
-		if (ADAPTER==null) {
-			if (SERVICE_LOADING_EXCEPTION!=null) {
-				throw new IllegalStateException("Misconfiguration exception. An error occurred while loading the "+SERVICE_RESOURCE+" resource service file", SERVICE_LOADING_EXCEPTION);
-			}
-			throw new IllegalStateException("Misconfiguration exception. You should provide a "+SERVICE_RESOURCE+" resource service file or override the getAdapter method");
-		} else {
-			return (TestAdapter<B, M>) ADAPTER;
-		}
+	protected TestAdapter<B,M> getAdapter() {
+		return ADAPTER_LOADER.get();
 	}
 
 	/** Checks if a variant is supported by the current adapter.
@@ -80,7 +60,7 @@ public abstract class AbstractAdaptableTest<B extends IBoard<M>, M> {
 	 */
 	public boolean isSupported(Variant variant) {
 		if (variant==STANDARD) return true;
-		final Supports supports = u.getClass().getAnnotation(Supports.class);
+		final Supports supports = adapter.getClass().getAnnotation(Supports.class);
 		return supports!=null && Arrays.asList(supports.value()).contains(variant);
 	}
 }

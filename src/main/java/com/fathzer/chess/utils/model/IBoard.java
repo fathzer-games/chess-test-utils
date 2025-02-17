@@ -6,21 +6,6 @@ import java.util.List;
  * @param <M> the type of the move
  */
 public interface IBoard<M> {
-	/** A constant that represents no piece */
-	public static int NONE = 0;
-	/** A constant that represents a pawn */
-	public static int PAWN = 1;
-	/** A constant that represents a knight */
-	public static int KNIGHT = 2;
-	/** A constant that represents a bishop */
-	public static int BISHOP = 3;
-	/** A constant that represents a rook */
-	public static int ROOK = 4;
-	/** A constant that represents a queen */
-	public static int QUEEN = 5;
-	/** A constant that represents a king */
-	public static int KING = 6;
-	
 	
 	/** Gets the list of moves available on the board.
 	 * <br>The board is free to return legal or <a href="https://www.chessprogramming.org/Pseudo-Legal_Move">pseudo legal</a> moves.
@@ -46,12 +31,6 @@ public interface IBoard<M> {
 	 */
 	void unmakeMove();
 	
-	/** Gets the piece at the given square.
-	 * @param algebraicNotation the <a href="https://en.wikipedia.org/wiki/Algebraic_notation_(chess)">algebraic notation</a> of the square to get the piece from
-	 * @return the piece at the given square (expressed with this interface constants). A positive number is returned for white pieces, a negative number for black pieces.
-	 */
-	int getPiece(String algebraicNotation);
-
 	/** Checks if the given move is legal.
 	 * <br>By default, this method returns true if the move is a move returned by {@link #getMoves()} and @link #makeMove(Object)} returns true.
 	 * <br><b>Warning</b>: this method requires that the <code>equals</code> method is overridden to return true for moves are equivalent.

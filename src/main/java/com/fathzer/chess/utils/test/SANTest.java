@@ -42,7 +42,7 @@ public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	 */
 	@SuppressWarnings("unchecked")
 	protected SANConverter<B, M> getSANConverter() {
-		return (SANConverter<B, M>)u;
+		return (SANConverter<B, M>)adapter;
 	}
 
 	/** Checks if illegal moves are handled correctly.
@@ -53,7 +53,7 @@ public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	 * @param board the board the move is played on
 	 */
 	protected void checkIllegalMove(SANConverter<B, M> converter, String uciMove, B board) {
-		final M move = u.move(board, uciMove);
+		final M move = adapter.move(board, uciMove);
 		assertThrows(IllegalArgumentException.class, () -> converter.getSAN(move, board));
 	}
 
@@ -63,8 +63,8 @@ public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 
 	private void testSAN(String fen, Variant variant, String uciMove, String expectedSan) {
 		final SANConverter<B, M> converter = getSANConverter();
-		final B board = u.fenToBoard(fen, variant);
-		assertEquals(expectedSan, converter.getSAN(u.move(board, uciMove), board));
+		final B board = adapter.fenToBoard(fen, variant);
+		assertEquals(expectedSan, converter.getSAN(adapter.move(board, uciMove), board));
 	}
 
 	@Test

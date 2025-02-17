@@ -86,7 +86,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 		*/
 		@SuppressWarnings("unchecked")
 		protected PGNConverter<B> getPGNBuilder() {
-			return (PGNConverter<B>)u;
+			return (PGNConverter<B>)adapter;
 		}
 	
 		@Test
@@ -96,8 +96,8 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 		void chess960() {
 			// Test with draw and non standard start FEN
 			final String fen = "2r1k3/pp2pppp/2q5/8/1P6/8/4P3/3KR3 b q - 0 1"; //Change to black winning position
-			final B board = u.fenToBoard(fen, Variant.CHESS960);
-			assertTrue(board.makeMove(u.move(board, "e8c8")));
+			final B board = adapter.fenToBoard(fen, Variant.CHESS960);
+			assertTrue(board.makeMove(adapter.move(board, "e8c8")));
 			final String pgn = getPGNBuilder().toPGN(board);
 			final Content parsed = parse(pgn);
 			checkMadatoryTags(Variant.CHESS960, parsed, fen, BLACK_WON);
@@ -132,7 +132,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 		@Tag("PGNTest.basic")
 		void basic() {
 			// Lasker vs Thomas, 1912
-			final B board = u.fenToBoard(STANDARD_START_FEN, Variant.STANDARD);
+			final B board = adapter.fenToBoard(STANDARD_START_FEN, Variant.STANDARD);
 			addMoves(board, FATAL_ATTRACTION_MOVES.split(" "));
 	
 			final String pgn = getPGNBuilder().toPGN(board);
@@ -150,8 +150,8 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 		void nonStandardStart() {
 			// Test with draw and non standard start FEN
 			final String fen = "r2qkbnr/ppp2ppp/2npb3/4p3/4P3/2NP1N2/PPP2PPP/R1BQKB1R w KQkq - 0 1";
-			final B board = u.fenToBoard(fen, Variant.STANDARD);
-			board.makeMove(u.move(board, "f1e2"));
+			final B board = adapter.fenToBoard(fen, Variant.STANDARD);
+			board.makeMove(adapter.move(board, "f1e2"));
 			final String pgn = getPGNBuilder().toPGN(board);
 			final Content parsed = parse(pgn);
 			checkMadatoryTags(Variant.STANDARD, parsed, fen, PLAYING);
@@ -162,7 +162,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 		void draw() {
 			// Test with draw and non standard start FEN
 			final String fen = "1k6/8/K1Q5/8/8/8/8/8 b - - 0 1";
-			final B board = u.fenToBoard(fen, Variant.STANDARD);
+			final B board = adapter.fenToBoard(fen, Variant.STANDARD);
 			final String pgn = getPGNBuilder().toPGN(board);
 			final Content parsed = parse(pgn);
 			checkMadatoryTags(Variant.STANDARD, parsed, fen, DRAW);
@@ -170,7 +170,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	
 		private void addMoves(B board, String[] uciMoves) {
 			for (String mv:uciMoves) {
-				board.makeMove(u.move(board, mv));
+				board.makeMove(adapter.move(board, mv));
 			}
 		}
 	
