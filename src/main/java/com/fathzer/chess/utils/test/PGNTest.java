@@ -238,7 +238,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 		}
 	
 		/** Asserts that the FEN tag value is correct
-		 * <br>The default implementation uses {@link #assertEquals(String, String, String)} to check the FEN values.
+		 * <br>The default implementation uses {@link org.junit.jupiter.api.Assertions#assertEquals(String, String, String)} to check the FEN values.
 		 * <br>Nevertheless, if you need a lenient check (for instance to tolerate deviations on move count or how castling rights are expressed),
 		 * you can override this method.
 		 * @param expectedFEN the expected FEN value
@@ -249,7 +249,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 		}
 	
 		/** Asserts that the line length does not exceed the recommended maximum 80 chars.
-		 * <br>The default implementation uses {@link #assertTrue(boolean, String)} to check the line length.
+		 * <br>The default implementation uses {@link org.junit.jupiter.api.Assertions#assertTrue(boolean, String)} to check the line length.
 		 * <br>Nevertheless, if you prefer not having this check, feel free to override this method.
 		 * @param line the line to check
 		 */

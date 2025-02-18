@@ -14,7 +14,7 @@ public interface IBoard<M> {
 	List<M> getMoves();
 	
 	/** Returns true if this IBoard's getMoves() method returns legal moves.
-	 * @return true if this IBoard's getMoves() method returns legal moves, false otherwise (Typically, if it returns a href="https://www.chessprogramming.org/Pseudo-Legal_Move">pseudo legal moves</a>)
+	 * @return true if this IBoard's getMoves() method returns legal moves, false (the default value) otherwise (Typically, if it returns <a href="https://www.chessprogramming.org/Pseudo-Legal_Move">pseudo legal moves</a>)
 	 */
 	default boolean isGetMovesLegal() {
 		return false;
