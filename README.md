@@ -5,7 +5,7 @@ Testing is a boring complicated nightmare...
 That's probably the reason why most of the chess libraries I've tested, including mine, had (minor) bugs.
 The purpose of this library is to make it easy to write exhaustive tests for chess libraries.
 
-It contains a set of abstract [JUnit5](https://junit.org/junit5) test classes to test various functionalities of chess libraries ([move generator](https://www.chessprogramming.org/Move_Generation), [FEN parser](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation), [Chess960](https://en.wikipedia.org/wiki/Chess960) compliance, etc...).
+It contains a set of [JUnit5](https://junit.org/junit5) test classes to test various functionalities of chess libraries ([move generator](https://www.chessprogramming.org/Move_Generation), [FEN parser](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation), [Chess960](https://en.wikipedia.org/wiki/Chess960) compliance, etc...).
 
 ## TOC
 
