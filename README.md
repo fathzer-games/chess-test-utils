@@ -133,41 +133,39 @@ Now, your're ready for testing!
 The first test that any chess engine author should try is
 [PerfTTest](#PerfTTest) (see below for a description of this test).
 
-To do this, simply create a JUnit5 test suite in the `src/test/java` directory of your project and add the following code in it:
+To do this, simply create a JUnit5 test suite in the `src/test/java` directory of your project containing the following code:
 ```java
 @Suite
 @SuiteDisplayName("Tests from chess-test-utils")
 @SelectClasses({PerftTest.class})
-//Prevent Sonar to complain about empty test class
-@SuppressWarnings("java:S2187")
 public class SuiteTest {
 }
 ```
 
 Thats all, this suite will be run with your other tests by `mvn test` command.
-By default, the PerfTTest will be run at depth 2 (see the [PerftTest documentation](#PerftTest) to known how to configure it).
+By default, the PerfTTest will be run at depth 2 to keep it fast (see the [PerftTest documentation](#PerftTest) to known how to configure it).
 
-You can add more tests to this suite (see below for the [list of available tests](#available-tests)).
+You can then add more tests to this suite (see below for the [list of available tests](#available-tests)).
 
 ## Available tests
-All tests are in `com.fathzer.chess.utils.test` package.
+All tests are in `com.fathzer.chess.utils.test` package.  
 Some requires extra interfaces to be implemented by your chess library adapter (see test documentation for more information).
 
 ### PerfTTest
-This test implements the [PerfT test](https://www.chessprogramming.org/Perft) performance test. It uses the test set provided by the [jchess-perft-dataset](https://github.com/fathzer-games/jchess-perft-dataset) project containing 6969 standard chess positions and 960 chess960 positions.
-By default, the depth of both standard and chess960 tests is 2. You can change it by setting the `perftDepth` or `chess960PerftDepth` system properties.
-For example, to run the standard test at depth 4 and chess960test at depth 2, you can use `mvn test -DperftDepth=4`.
+This test implements the [PerfT test](https://www.chessprogramming.org/Perft) performance test. It uses the test set provided by the [jchess-perft-dataset](https://github.com/fathzer-games/jchess-perft-dataset) project containing 6969 standard chess positions and 960 chess960 positions.  
+By default, the depth of both standard and chess960 tests is 2. You can change it by setting the `perftDepth` or `chess960PerftDepth` system properties.  
+For example, to run the standard test at depth 4 and keep chess960test at depth 2, you can use `mvn test -DperftDepth=4`.
 
 ### Chess960Test
-This test implements some specific tests for [Chess960](https://www.chessprogramming.org/Chess960) move generators.
+This test implements some specific tests for [Chess960](https://www.chessprogramming.org/Chess960) move generators.  
 It requires your adapter to have the `@Supports(Variant.Chess960)` annotation and to implement the `com.fathzer.chess.utils.model.BoardPieceScanner` interface.
 
 ### SANTest
-This test implements some tests for [SAN](https://en.wikipedia.org/wiki/Algebraic_notation_(chess)) converters.
+This test implements some tests for [SAN](https://en.wikipedia.org/wiki/Algebraic_notation_(chess)) converters.  
 It requires your adapter to implement the `com.fathzer.chess.utils.test.SANTest.SANConverter` interface.
 
 ### PGNTest
-This test implements some tests for [PGN](https://www.chessprogramming.org/PGN) builders.
+This test implements some tests for [PGN](https://www.chessprogramming.org/PGN) builders.  
 It requires your adapter to implement the `com.fathzer.chess.utils.test.PGNTest.PGNParser` interface.
 
 ## Advanced usage - Filtering tests
