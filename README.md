@@ -2,17 +2,25 @@
 A test framework for chess libraries
 
 Testing is a boring complicated nightmare...
-That's probably the reason why most of the chess libraries I've tested had (minor) bugs.
+That's probably the reason why most of the chess libraries I've tested, including mine, had (minor) bugs.
 The purpose of this library is to make it easy to write exhaustive tests for chess libraries.
 
 It contains a set of abstract [JUnit5](https://junit.org/junit5) test classes to test various functionalities of chess libraries ([move generator](https://www.chessprogramming.org/Move_Generation), [FEN parser](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation), [Chess960](https://en.wikipedia.org/wiki/Chess960) compliance, etc...).
 
 ## TOC
 
-- [How to install](#How-to-install)
-- [Write your first test](#Write-your-first-test)
-- [Available tests](#Available-tests)
-- [Advanced usage - Filtering tests](#Advanced-usage---Filtering-tests)
+- [chess-test-utils](#chess-test-utils)
+	- [TOC](#toc)
+	- [How to install](#how-to-install)
+	- [Write your first test](#write-your-first-test)
+	- [Available tests](#available-tests)
+		- [PerfTTest](#perfttest)
+		- [Chess960Test](#chess960test)
+		- [SANTest](#santest)
+		- [PGNTest](#pgntest)
+	- [Advanced usage - Filtering tests](#advanced-usage---filtering-tests)
+		- [Exclude some methods from test classes](#exclude-some-methods-from-test-classes)
+		- [Extend classes](#extend-classes)
 
 ## How to install
 To use it, start by adding the following dependency in your project:
@@ -118,17 +126,54 @@ Last thing: The adapter is discovered using the [java service loader](https://do
 You have to create a resource file named `com.fathzer.chess.utils.model.TestAdapter` file in the `/src/test/resources/META-INF/services/` directory of your project with the following content (assuming your adapter class name is `com.mylib.ChessLibTestAdapter`):
 `com.mylib.ChessLibTestAdapter`
 
-
 Now, your're ready for testing!
 
 ## Write your first test
 
-Let suppose you have a class that converts a chess move to [Standard Algebraic Notation (SAN)](https://en.wikipedia.org/wiki/Algebraic_notation_(chess)) notation.
+The first test that any chess engine author should try is
+[PerfTTest](#PerfTTest) (see below for a description of this test).
 
-//To be completed
+To do this, simply create a JUnit5 test suite in the `src/test/java` directory of your project and add the following code in it:
+```java
+@Suite
+@SuiteDisplayName("Tests from chess-test-utils")
+@SelectClasses({PerftTest.class})
+//Prevent Sonar to complain about empty test class
+@SuppressWarnings("java:S2187")
+public class SuiteTest {
+}
+```
+
+Thats all, this suite will be run with your other tests by `mvn test` command.
+By default, the PerfTTest will be run at depth 2 (see the [PerftTest documentation](#PerftTest) to known how to configure it).
+
+You can add more tests to this suite (see below for the [list of available tests](#available-tests)).
 
 ## Available tests
+All tests are in `com.fathzer.chess.utils.test` package.
+Some requires extra interfaces to be implemented by your chess library adapter (see test documentation for more information).
+
+### PerfTTest
+This test implements the [PerfT test](https://www.chessprogramming.org/Perft) performance test. It uses the test set provided by the [jchess-perft-dataset](https://github.com/fathzer-games/jchess-perft-dataset) project containing 6969 standard chess positions and 960 chess960 positions.
+By default, the depth of both standard and chess960 tests is 2. You can change it by setting the `perftDepth` or `chess960PerftDepth` system properties.
+For example, to run the standard test at depth 4 and chess960test at depth 2, you can use `mvn test -DperftDepth=4`.
+
+### Chess960Test
+This test implements some specific tests for [Chess960](https://www.chessprogramming.org/Chess960) move generators.
+It requires your adapter to have the `@Supports(Variant.Chess960)` annotation and to implement the `com.fathzer.chess.utils.model.BoardPieceScanner` interface.
+
+### SANTest
+This test implements some tests for [SAN](https://en.wikipedia.org/wiki/Algebraic_notation_(chess)) converters.
+It requires your adapter to implement the `com.fathzer.chess.utils.test.SANTest.SANConverter` interface.
+
+### PGNTest
+This test implements some tests for [PGN](https://www.chessprogramming.org/PGN) builders.
+It requires your adapter to implement the `com.fathzer.chess.utils.test.PGNTest.PGNParser` interface.
 
 ## Advanced usage - Filtering tests
+
+### Exclude some methods from test classes
 // TODO
 @ExcludeTags
+
+### Extend classes
