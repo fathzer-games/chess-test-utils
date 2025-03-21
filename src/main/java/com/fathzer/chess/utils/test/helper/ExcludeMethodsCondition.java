@@ -28,29 +28,30 @@ class ExcludeMethodsCondition implements ExecutionCondition {
 		}
 		final Method method = (Method) element;
 
-		final Optional<Set<String>> tagsToExclude = AnnotationUtils.findAnnotation(
-				context.getRequiredTestClass(),ExcludeMethods.class)
+		final Class<?> testClass = context.getRequiredTestClass();
+		final Optional<Set<String>> methodsToExclude = AnnotationUtils.findAnnotation(
+				testClass,ExcludeMethods.class)
 		.map(a -> 
 			Arrays.asList(a.value())
 					.stream()
 					.collect(Collectors.toSet())
 		);
-		if (!tagsToExclude.isPresent() || tagsToExclude.get().stream()
+		if (!methodsToExclude.isPresent() || methodsToExclude.get().stream()
 				.allMatch(s -> (s == null) || s.trim().isEmpty())) {
 			return ENABLED_IF_EXCLUDE_TAG_IS_INVALID;
 		}
-		final String tag = method.getName();
-		if (tagsToExclude.get().contains(tag)) {
+		final String methodName = method.getName();
+		if (methodsToExclude.get().contains(methodName)) {
 			return ConditionEvaluationResult.disabled(String.format(
 					"Test method \"%s\" which is on the @ExcludeMethods list \"[%s]\", test will be skipped",
-					tag,
-					tagsToExclude.get().stream().collect(Collectors.joining(","))
+					methodName,
+					methodsToExclude.get().stream().collect(Collectors.joining(","))
 			));
 		}
 		return ConditionEvaluationResult.enabled(String.format(
 				"Test method \"%s\" is not on the @ExcludeMethods list \"[%s]\", test will be run",
-				tag,
-				tagsToExclude.get().stream().collect(Collectors.joining(","))
+				methodName,
+				methodsToExclude.get().stream().collect(Collectors.joining(","))
 		));
 	}
 }
