@@ -102,18 +102,22 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 			final Content parsed = parse(pgn);
 			checkMadatoryTags(Variant.CHESS960, parsed, fen, BLACK_WON);
 		}
+
+		private String wrongTag(String tag) {
+			return tag+" tag value is wrong";
+		}
 		
 		private void checkMadatoryTags(Variant variant, Content parsed, String expectedFEN, String expectedResult) {
 			// Check that mandatory tags are there in the right order
 			final String tagPairKeys = parsed.tagPairs().keySet().stream().collect(Collectors.joining(" "));
 			assertTrue(tagPairKeys.startsWith(SEVEN_TAG_ROSTER_KEYS),String.format("PGN does not start with the seven tags roster (it starts with %s)", tagPairKeys));
-			assertEquals(expectedResult, parsed.tagPairs().get(RESULT_TAG),RESULT_TAG+" tag value is wrong");
+			assertEquals(expectedResult, parsed.tagPairs().get(RESULT_TAG),wrongTag(RESULT_TAG));
 	
 			// Check variant tag
 			String actualVariant = parsed.tagPairs.get(VARIANT_TAG);
 			if (variant==Variant.CHESS960) {
 				assertNotNull(actualVariant, "Missing "+VARIANT_TAG+" tag");
-				assertEquals(actualVariant, actualVariant, VARIANT_TAG+" tag value is wrong");
+				assertEquals(actualVariant, actualVariant, wrongTag(VARIANT_TAG));
 			} else {
 				assertNull(actualVariant, "Should not have "+VARIANT_TAG+" tag");
 			}
@@ -245,7 +249,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 		 * @param actualFEN the actual FEN value
 		 */
 		protected void assertFen(String expectedFEN, String actualFEN) {
-			assertEquals(expectedFEN, actualFEN, FEN_TAG+" tag value is wrong");
+			assertEquals(expectedFEN, actualFEN, wrongTag(FEN_TAG));
 		}
 	
 		/** Asserts that the line length does not exceed the recommended maximum 80 chars.

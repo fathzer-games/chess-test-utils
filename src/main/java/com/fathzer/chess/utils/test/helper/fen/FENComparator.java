@@ -89,36 +89,28 @@ public class FENComparator {
 
     static int getOuterFile(String interestingPieces, boolean kingSide) {
         int fileIndex = kingSide ? getFileCount(interestingPieces)-1 : 0;
-        if (kingSide) {
-            for (int i = interestingPieces.length()-1; i >= 0; i--) {
-                final char c = interestingPieces.charAt(i);
-                final char lowerCased = Character.toLowerCase(c);
-                if (lowerCased == 'r') {
-                    break;
-                } else if (lowerCased == 'k') {
-                    fileIndex = -1;
-                    break;
-                } else if (Character.isDigit(c)) {
-                    fileIndex = fileIndex - Character.getNumericValue(c);
-                } else {
-                    fileIndex--;
-                }
+        final int increment = kingSide ? -1 : 1;
+        final int to = kingSide ? -1 : interestingPieces.length();
+        int i = kingSide ? interestingPieces.length()-1 : 0;
+        while (i != to) {
+            final char c = interestingPieces.charAt(i);
+            final char lowerCased = Character.toLowerCase(c);
+            fileIndex = consume(lowerCased, fileIndex, increment);
+            if (lowerCased=='r' || lowerCased=='k') {
+                break;
             }
-        } else {
-            for (int i = 0; i < interestingPieces.length(); i++) {
-                final char c = interestingPieces.charAt(i);
-                final char lowerCased = Character.toLowerCase(c);
-                if (lowerCased == 'r') {
-                    break;
-                } else if (lowerCased == 'k') {
-                    fileIndex = -1;
-                    break;
-                } else if (Character.isDigit(c)) {
-                    fileIndex = fileIndex + Character.getNumericValue(c);
-                } else {
-                    fileIndex++;
-                }
-           }
+            i = i + increment;
+        }
+        return fileIndex;
+    }
+
+    private static int consume(char lowerCased, int fileIndex, int increment) {
+        if (lowerCased == 'k') {
+            fileIndex = -1;
+        } else if (Character.isDigit(lowerCased)) {
+            fileIndex = fileIndex + increment*Character.getNumericValue(lowerCased);
+        } else if (lowerCased != 'r') {
+            fileIndex = fileIndex + increment;
         }
         return fileIndex;
     }

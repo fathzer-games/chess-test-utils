@@ -34,10 +34,8 @@ class AdapterLoader {
 	
 	@SuppressWarnings("unchecked")
 	public <B extends IBoard<M>, M> TestAdapter<B, M> get() {
-		if (adapter == null && serviceLoadingException == null) {
-			if (!loadFromSystemProperty()) {
-				loadFromService();
-			}
+		if (adapter == null && serviceLoadingException == null && !loadFromSystemProperty()) {
+			loadFromService();
 		}
 		if (serviceLoadingException != null) {
 			throw serviceLoadingException;
