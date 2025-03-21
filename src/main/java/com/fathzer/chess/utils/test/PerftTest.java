@@ -56,14 +56,10 @@ public class PerftTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, 
             if (parts.length<=depth) {
             	return;
             }
+            final IBoard<M> board = adapter.fenToBoard(fen, variant);
+            final PerfT.Result<M> result = perfT.divide(board, depth);
             long expectedTotalMoves = Long.parseLong(parts[depth].split(" ")[1].trim());
-            try {
-	            final IBoard<M> board = adapter.fenToBoard(fen, variant);
-	            final PerfT.Result<M> result = perfT.divide(board, depth);
-	            assertEquals(expectedTotalMoves, result.getNbLeaves(), String.format("Fen: %s, Depth: %s, Expected: %s, Actual: %s", fen, depth, expectedTotalMoves, result.getNbLeaves()));
-			} catch (NullPointerException e) {
-				throw new RuntimeException("Fen: " + fen, e);
-			}
+            assertEquals(expectedTotalMoves, result.getNbLeaves(), String.format("Fen: %s, Depth: %s, Expected: %s, Actual: %s", fen, depth, expectedTotalMoves, result.getNbLeaves()));
         });
 	}
 }

@@ -193,37 +193,27 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 			final String[] lines = pgn.split("\n");
 			final Map<String, String> tagPairs = new LinkedHashMap<>();
 			final List<String> moves = new ArrayList<>();
-			boolean emptySeparatorLine = false;
+			boolean emptySeparatorLineFound = false;
 			for (String line : lines) {
 				// Check that no lines are bigger that 80 chars
 				assertLineLength(line);
 				if (line.startsWith("[") && line.endsWith("]")) {
-					if (emptySeparatorLine) {
+					if (emptySeparatorLineFound) {
 						throw new IllegalArgumentException("There is a 'tag pairs - move list' separator empty line in the tag pairs section");
 					}
-					line = line.substring(1, line.length() - 1);
-					final int index = line.indexOf(' ');
-					if (index == -1 || index == line.length() - 1) {
-						throw new IllegalArgumentException("Invalid tag: " + line);
-					}
-					final String name = line.substring(0, index);
-					final String value = line.substring(index + 1);
-					if (name.isBlank() || value.isBlank() || value.charAt(0) != '"' || value.charAt(value.length() - 1) != '"') {
-						throw new IllegalArgumentException("Invalid tag: " + line);
-					}
-					tagPairs.put(name, value.substring(1, value.length() - 1));
-					emptySeparatorLine = false;
+					parseTagPair(tagPairs, line);
+					emptySeparatorLineFound = false;
 				} else if (!line.isEmpty()) {
 					// A move line
-					if (!emptySeparatorLine) {
+					if (!emptySeparatorLineFound) {
 						throw new IllegalArgumentException("'tag pairs - move list' separator empty line is missing");
 					}
 					parseMoves(moves, line.split(" "));
 				} else {
-					if (emptySeparatorLine) {
+					if (emptySeparatorLineFound) {
 						throw new IllegalArgumentException("There are more than one 'tag pairs - move list' separator empty lines");
 					}
-					emptySeparatorLine = true;
+					emptySeparatorLineFound = true;
 				}
 			}
 			return new Content(tagPairs, moves);
@@ -233,12 +223,27 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 		 * @param moves the list to fill
 		 * @param tokens the tokens to parse
 		 */
-		protected void parseMoves(List<String> moves, String[] tokens) {
+		private void parseMoves(List<String> moves, String[] tokens) {
 			for (String token : tokens) {
 				if (!token.isEmpty() && !token.endsWith(".")) {
 					moves.add(token);
 				}
 			}
+		}
+
+		private void parseTagPair(Map<String, String> tagPairs, String line) {
+			line = line.substring(1, line.length() - 1);
+			final int index = line.indexOf(' ');
+			if (index == -1 || index == line.length() - 1) {
+				// There's only one word in the tag
+				throw new IllegalArgumentException("Invalid tag: " + line);
+			}
+			final String name = line.substring(0, index);
+			final String value = line.substring(index + 1);
+			if (name.isBlank() || value.isBlank() || value.charAt(0) != '"' || value.charAt(value.length() - 1) != '"') {
+				throw new IllegalArgumentException("Invalid tag: " + line);
+			}
+			tagPairs.put(name, value.substring(1, value.length() - 1));
 		}
 	
 		/** Asserts that the FEN tag value is correct
