@@ -1,3 +1,8 @@
+[![Maven Central](https://img.shields.io/maven-central/v/com.fathzer/chess-test-utils)](https://central.sonatype.com/artifact/com.fathzer/chess-test-utils)
+[![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)](https://github.com/fathzer-games/chess-test-utils/blob/master/LICENSE)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fathzer_chess-test-utils&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fathzer-games_chess-test-utils)
+[![javadoc](https://javadoc.io/badge2/com.fathzer/chess-test-utils/javadoc.svg)](https://javadoc.io/doc/com.fathzer/chess-test-utils)
+
 # chess-test-utils
 A test framework for chess libraries
 
@@ -34,7 +39,7 @@ To use it, start by adding the following dependency in your project:
 </dependency>
 ```
 
-Then write concrete implementations of `Iboard` and `TestAdapter`
+Then write a concrete implementation of `IBoard` and `TestAdapter`
 `IBoard` is the interface used by the chess libraries to represent a chess board and access to basic functionalities like playing moves or getting the list of possible moves.
 Usually a board implementation is straight-forward because its methods are probably already implemented in the chess library you're testing. 
 

@@ -24,6 +24,9 @@ public interface TestAdapter<B extends IBoard<M>, M> {
 	
 	/**
 	 * Converts a move to its UCI representation.
+	 * <br>The default implementation returns the move's {@link Object#toString() toString()} value.
+	 * <br>Subclasses may override this method to return the move's UCI representation.
+	 * @param board the board on which the move is played.
 	 * @param move the move to convert
 	 * @return the UCI representation of the move
 	 */

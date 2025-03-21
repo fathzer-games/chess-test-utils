@@ -1,5 +1,10 @@
 package com.fathzer.chess.utils.model;
 
+/**
+ * A class that can get the piece at a given square of a chess board.
+ * 
+ * @param <B> the type of the board
+ */
 @FunctionalInterface
 public interface BoardPieceScanner<B extends IBoard<?>> {
 	/** A constant that represents no piece */
@@ -18,6 +23,7 @@ public interface BoardPieceScanner<B extends IBoard<?>> {
 	public static int KING = 6;
 
 	/** Gets the piece at the given square.
+	 * @param board the board
 	 * @param algebraicNotation the <a href="https://en.wikipedia.org/wiki/Algebraic_notation_(chess)">algebraic notation</a> of the square to get the piece from
 	 * @return the piece at the given square (expressed with this interface constants). A positive number is returned for white pieces, a negative number for black pieces.
 	 */

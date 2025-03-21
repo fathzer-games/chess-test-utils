@@ -7,14 +7,33 @@ import java.util.Optional;
 
 import com.fathzer.chess.utils.model.IBoard;
 
+/**
+ * A basic <a href="https://www.chessprogramming.org/Perft">Perft</a> test.
+ * @param <M> the type of the move
+ */
 public class PerfT<M> {
 	
+	/**
+	 * The result of a {@link PerfT} test.
+	 * @param <T> the type of the move
+	 * @param divides the list of {@link Divide}s
+	 */
 	public record Result<T>(Collection<Divide<T>> divides) {
+		/**
+		 * Gets the number of leaves.
+		 * @return a positive long
+		 */
 		public long getNbLeaves() {
-			return divides.stream().mapToLong(Divide::getCount).sum();
+			return divides.stream().mapToLong(Divide::count).sum();
 		}
 	}
 
+	/**
+	 * Performs a <a href="https://www.chessprogramming.org/Perft">Perft</a> test.
+	 * @param generator the board to run the test on
+	 * @param depth the depth of the search
+	 * @return the result of the test
+	 */
 	public Result<M> divide(final IBoard<M> generator, final int depth) {
 		if (depth <= 0) {
             throw new IllegalArgumentException("Search depth MUST be > 0");

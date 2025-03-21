@@ -22,7 +22,9 @@ import org.junit.jupiter.api.Test;
 @Requires(PGNTest.PGNConverter.class)
 public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M> {
 	
-	/** A converter from a board to its PGN representation */
+	/** A converter from a board to its PGN representation
+	 * @param <B> the type of the board
+	 */
 	@FunctionalInterface
 	public interface PGNConverter<B> {
 		/** Gets the PGN representation of the given board
@@ -68,8 +70,6 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	/** The seven tag roster keys in the order specified in the PGN specification (see <a href="https://github.com/fsmosca/PGN-Standard/blob/master/PGN-Standard.txt">PGN-Standard.txt</a>) */
 	protected static final String SEVEN_TAG_ROSTER_KEYS = EVENT_TAG+" "+SITE_TAG+" "+DATE_TAG+" "+ROUND_TAG+" "+WHITE_TAG+" "+BLACK_TAG+" "+RESULT_TAG;
 	
-	private static final String UNKNOWN = "?";
-
 	/** The value of the PGN result tag when white won */
 	protected static final String WHITE_WON = "1-0";
 	/** The value of the PGN result tag when black won */

@@ -19,6 +19,8 @@ import java.util.List;
 /** 
  * A test class based on [Perft](https://www.chessprogramming.org/Perft).
  * <br>This class uses the data set available in [jchess-perft-dataset](https://github.com/fathzer-games/jchess-perft-dataset).
+ * @param <B> the type of the board
+ * @param <M> the type of the move
  */
 public class PerftTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M> {
     @Test

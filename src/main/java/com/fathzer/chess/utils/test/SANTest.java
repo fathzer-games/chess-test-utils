@@ -21,7 +21,10 @@ import com.fathzer.chess.utils.test.helper.Requires;
 @Requires(SANTest.SANConverter.class)
 public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M> {
 	
-	/** A class that converts a move to its Standard Algebraic Notation (SAN). */
+	/** A class that converts a move to its Standard Algebraic Notation (SAN).
+	 * @param <B> the type of the board
+	 * @param <M> the type of the move
+	 */
 	@FunctionalInterface
 	public interface SANConverter<B, M> {
 		/** Converts a move to its Standard Algebraic Notation (SAN).
