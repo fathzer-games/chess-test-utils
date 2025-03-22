@@ -23,15 +23,15 @@ public class FENComparator {
      * @see #withStrictMoveNumber(boolean)
      */
     public boolean areEqual(String fen1, String fen2) {
+        final String[] fen1Parts = fen1.split(" ");
+        final String[] fen2Parts = fen2.split(" ");
+        if (fen1Parts.length != 6 || fen2Parts.length != 6) {
+            throw new IllegalArgumentException("Invalid FEN, FEN should have 6 parts");
+        }
         if (strictCastling) {
             return fen1.equals(fen2);
         } else {
             // Check excluding castling rights
-            String[] fen1Parts = fen1.split(" ");
-            String[] fen2Parts = fen2.split(" ");
-            if (fen1Parts.length != 6 || fen2Parts.length != 6) {
-                throw new IllegalArgumentException("Invalid FEN, FEN should have 6 parts");
-            }
             if (!fen1Parts[0].equals(fen2Parts[0]) || !fen1Parts[1].equals(fen2Parts[1]) || !fen1Parts[3].equals(fen2Parts[3]) || !fen1Parts[4].equals(fen2Parts[4]) || (strictMoveNumber && !fen1Parts[5].equals(fen2Parts[5]))) {
                 return false;
             }
@@ -78,8 +78,9 @@ public class FENComparator {
             return checkOuterRook(interestingPieces, right1 == 'k' ? right2 : right1, true);
         } else if (right1 == 'q' || right2 == 'q') {
             return checkOuterRook(interestingPieces, right1 == 'q' ? right2 : right1, false);
+        } else {
+            return false;
         }
-        return false;
     }
                         
     private static boolean checkOuterRook(String interestingPieces, char right, boolean kingSide) {
@@ -101,7 +102,7 @@ public class FENComparator {
             }
             i = i + increment;
         }
-        return fileIndex;
+        return i == to ? -1 : fileIndex;
     }
 
     private static int consume(char lowerCased, int fileIndex, int increment) {

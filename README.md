@@ -23,9 +23,9 @@ It contains a set of [JUnit5](https://junit.org/junit5) test classes to test var
 		- [Chess960Test](#chess960test)
 		- [SANTest](#santest)
 		- [PGNTest](#pgntest)
-	- [Advanced usage - Filtering tests](#advanced-usage---filtering-tests)
+	- [Advanced usage](#advanced-usage)
 		- [Exclude some methods from test classes](#exclude-some-methods-from-test-classes)
-		- [Extend classes](#extend-classes)
+		- [Customize tests](#customize-tests)
 
 ## How to install
 To use it, start by adding the following dependency in your project:
@@ -131,6 +131,8 @@ Last thing: The adapter is discovered using the [java service loader](https://do
 You have to create a resource file named `com.fathzer.chess.utils.model.TestAdapter` file in the `/src/test/resources/META-INF/services/` directory of your project with the following content (assuming your adapter class name is `com.mylib.ChessLibTestAdapter`):
 `com.mylib.ChessLibTestAdapter`
 
+An alternative to java service loader is to set the `test.property` system property to the fully qualified name of your adapter class.
+
 Now, your're ready for testing!
 
 ## Write your first test
@@ -173,10 +175,40 @@ It requires your adapter to implement the `com.fathzer.chess.utils.test.SANTest.
 This test implements some tests for [PGN](https://www.chessprogramming.org/PGN) builders.  
 It requires your adapter to implement the `com.fathzer.chess.utils.test.PGNTest.PGNParser` interface.
 
-## Advanced usage - Filtering tests
+## Advanced usage
 
 ### Exclude some methods from test classes
-// TODO
-@ExcludeTags
 
-### Extend classes
+All test methods of the library are tagged with `@Tag("className.methodName")` and can be excluded by using the `@ExcludeTags` annotation.
+For instance, to exclude the `threeQueensAmbiguity` test from the `SANTest`, you can write your TestSuite like this:
+
+```java
+@Suite
+@SuiteDisplayName("Tests from chess-test-utils")
+@SelectClasses({SANTest.class})
+@ExcludeTags("SANTest.threeQueensAmbiguity")
+public class SuiteTest {
+}
+```
+
+### Customize tests
+
+You can subclass tests to customize them.  
+As JUnit5 always run test subclasses, even if they have not a standard test class name, it is recommended not to include these subclasses in a test suite (JUnit5 would run them twice, once in the suite and once as a standalone test).
+
+As `@ExcludeTags` annotation is not available on standard test classes, you can use the `@ExcludeMethods` annotation to exclude some methods.
+
+Here is an example that subclases the SANTest and excludes the `threeQueensAmbiguity` test method and adds a custom test:
+
+```java
+@ExcludeMethods("chess960")
+public class MyTest extends SANTest {
+	@Test
+	void customTest() {
+		//TODO	
+	}
+}
+```
+
+//TODO
+example with PGNTest that customizes the fen comparison
