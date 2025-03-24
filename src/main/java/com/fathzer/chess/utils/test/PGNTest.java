@@ -103,7 +103,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 			checkMadatoryTags(Variant.CHESS960, parsed, fen, BLACK_WON);
 		}
 
-		private String wrongTag(String tag) {
+		protected String wrongTag(String tag) {
 			return tag+" tag value is wrong";
 		}
 		
@@ -126,7 +126,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 			final String actualFEN = parsed.tagPairs.get(FEN_TAG);
 			if (expectedFEN!=null) {
 				assertNotNull(actualFEN, "Missing "+FEN_TAG+" tag");
-				assertFen(expectedFEN, actualFEN);
+				assertFen(variant, expectedFEN, actualFEN);
 			} else {
 				assertNull(actualFEN, "Should not have "+FEN_TAG+" tag");
 			}
@@ -250,10 +250,11 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 		 * <br>The default implementation uses {@link org.junit.jupiter.api.Assertions#assertEquals(String, String, String)} to check the FEN values.
 		 * <br>Nevertheless, if you need a lenient check (for instance to tolerate deviations on move count or how castling rights are expressed),
 		 * you can override this method.
+		 * @param variant the chess game variant
 		 * @param expectedFEN the expected FEN value
 		 * @param actualFEN the actual FEN value
 		 */
-		protected void assertFen(String expectedFEN, String actualFEN) {
+		protected void assertFen(Variant variant, String expectedFEN, String actualFEN) {
 			assertEquals(expectedFEN, actualFEN, wrongTag(FEN_TAG));
 		}
 	

@@ -26,6 +26,7 @@ It contains a set of [JUnit5](https://junit.org/junit5) test classes to test var
 	- [Advanced usage](#advanced-usage)
 		- [Exclude some methods from test classes](#exclude-some-methods-from-test-classes)
 		- [Customize tests](#customize-tests)
+			- [Customizing the fen comparison](#customizing-the-fen-comparison)
 
 ## How to install
 To use it, start by adding the following dependency in your project:
@@ -198,17 +199,44 @@ As JUnit5 always run test subclasses, even if they have not a standard test clas
 
 As `@ExcludeTags` annotation is not available on standard test classes, you can use the `@ExcludeMethods` annotation to exclude some methods.
 
-Here is an example that subclases the SANTest and excludes the `threeQueensAmbiguity` test method and adds a custom test:
+If you define a custom generic test that requires the adapter to support a specific chess variant, you must add the `@IfVariantSupported` annotation to automatically having it disabled when the adapter does not support the variant.
+
+Here is an example that subclasses the SANTest and excludes the `threeQueensAmbiguity` test method and adds a custom test that requires Chess960 support:
 
 ```java
-@ExcludeMethods("chess960")
-public class MyTest extends SANTest {
+@ExcludeMethods("threeQueensAmbiguity")
+class MyTest extends SANTest {
 	@Test
+	@IfVariantSupported(Variant.Chess960)
 	void customTest() {
 		//TODO	
 	}
 }
 ```
+
+You may also want to change some test behavior.  
+For instance, the [calvin-chess](https://github.com/kelseyde/calvin-chess) library have a PGN builder implementation that is not exactly the one expected by the PGNTest: for Chess960 games, it always use file letters to express the castling rights in the FEN tag (This is the Shredder-FEN way to do this). By default, PGNTest expect [X-FEN](https://en.wikipedia.org/wiki/X-FEN), where letters are used only when the rook involved in the castling move is not the outermost rook.
+
+Fortunately, you can subclass the PGNTest and override the `assertFen` method to customize the comparison. Here is an example, tailored to work with the [calvin-chess](https://github.com/kelseyde/calvin-chess) library:
+```java
+class PGNCustomizedTest extends PGNTest<CalvinBoard, Move> {
+    @Override
+    protected void assertFen(Variant variant, String expectedFEN, String actualFEN) {
+        if (variant == Variant.CHESS960) {
+            // Do lenient castling rights check if variant is CHESS960
+            if (!new FENComparator().withStrictCastling(false).areEqual(expectedFEN, actualFEN)) {
+                wrongTag(FEN_TAG);
+            }
+        } else {
+            super.assertFen(variant, expectedFEN, actualFEN);
+        }
+    }
+}
+```
+
+If you don't want to subclass an existing test, you can subclass the `AbstractAdaptableTest` class to have access to the adapter and being able to use the `@IfVariantSupported` annotation.
+
+#### Customizing the fen comparison
 
 //TODO
 example with PGNTest that customizes the fen comparison
