@@ -15,7 +15,7 @@ import com.fathzer.chess.utils.test.helper.Requires;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-/** An abstract test class for <a href="https://en.wikipedia.org/wiki/Portable_Game_Notation">PGN</a> builder.
+/** A test class for <a href="https://en.wikipedia.org/wiki/Portable_Game_Notation">PGN</a> builder.
  * @param <B> the type of the board
  * @param <M> the type of the move
  */
@@ -97,7 +97,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 			// Test with draw and non standard start FEN
 			final String fen = "2r1k3/pp2pppp/2q5/8/1P6/8/4P3/3KR3 b q - 0 1"; //Change to black winning position
 			final B board = adapter.fenToBoard(fen, Variant.CHESS960);
-			assertTrue(board.makeMove(adapter.move(board, "e8c8")));
+			assertTrue(board.makeMove(board.toMove("e8c8")));
 			final String pgn = getPGNBuilder().toPGN(board);
 			final Content parsed = parse(pgn);
 			checkMadatoryTags(Variant.CHESS960, parsed, fen, BLACK_WON);
@@ -155,7 +155,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 			// Test with draw and non standard start FEN
 			final String fen = "r2qkbnr/ppp2ppp/2npb3/4p3/4P3/2NP1N2/PPP2PPP/R1BQKB1R w KQkq - 0 1";
 			final B board = adapter.fenToBoard(fen, Variant.STANDARD);
-			board.makeMove(adapter.move(board, "f1e2"));
+			board.makeMove(board.toMove("f1e2"));
 			final String pgn = getPGNBuilder().toPGN(board);
 			final Content parsed = parse(pgn);
 			checkMadatoryTags(Variant.STANDARD, parsed, fen, PLAYING);
@@ -174,7 +174,7 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	
 		private void addMoves(B board, String[] uciMoves) {
 			for (String mv:uciMoves) {
-				board.makeMove(adapter.move(board, mv));
+				board.makeMove(board.toMove(mv));
 			}
 		}
 	

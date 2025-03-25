@@ -56,7 +56,7 @@ public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	 * @param board the board the move is played on
 	 */
 	protected void checkIllegalMove(SANConverter<B, M> converter, String uciMove, B board) {
-		final M move = adapter.move(board, uciMove);
+		final M move = board.toMove(uciMove);
 		assertThrows(IllegalArgumentException.class, () -> converter.getSAN(move, board));
 	}
 
@@ -67,7 +67,7 @@ public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	private void testSAN(String fen, Variant variant, String uciMove, String expectedSan) {
 		final SANConverter<B, M> converter = getSANConverter();
 		final B board = adapter.fenToBoard(fen, variant);
-		assertEquals(expectedSan, converter.getSAN(adapter.move(board, uciMove), board));
+		assertEquals(expectedSan, converter.getSAN(board.toMove(uciMove), board));
 	}
 
 	@Test

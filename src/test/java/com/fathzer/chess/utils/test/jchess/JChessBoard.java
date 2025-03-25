@@ -24,7 +24,7 @@ public class JChessBoard implements IBoard<JChessMove>{
 	public List<JChessMove> getMoves() {
 		return board.getMoves().stream().map(m -> new JChessMove(m, this.board)).toList();
 	}
-
+	
 	@Override
 	public boolean makeMove(JChessMove mv) {
 		final boolean isValid = board.makeMove(mv, MoveConfidence.UNSAFE);
