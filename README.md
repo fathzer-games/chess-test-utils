@@ -15,18 +15,17 @@ It contains a set of [JUnit5](https://junit.org/junit5) test classes to test var
 ## TOC
 
 - [chess-test-utils](#chess-test-utils)
-	- [TOC](#toc)
-	- [How to install](#how-to-install)
-	- [Write your first test](#write-your-first-test)
-	- [Available tests](#available-tests)
-		- [PerfTTest](#perfttest)
-		- [Chess960Test](#chess960test)
-		- [SANTest](#santest)
-		- [PGNTest](#pgntest)
-	- [Advanced usage](#advanced-usage)
-		- [Exclude some methods from test classes](#exclude-some-methods-from-test-classes)
-		- [Customize tests](#customize-tests)
-			- [Customizing the fen comparison](#customizing-the-fen-comparison)
+  - [TOC](#toc)
+  - [How to install](#how-to-install)
+  - [Write your first test](#write-your-first-test)
+  - [Available tests](#available-tests)
+    - [PerfTTest](#perfttest)
+    - [Chess960Test](#chess960test)
+    - [SANTest](#santest)
+    - [PGNTest](#pgntest)
+  - [Advanced usage](#advanced-usage)
+    - [Exclude some methods from test classes](#exclude-some-methods-from-test-classes)
+    - [Customize tests](#customize-tests)
 
 ## How to install
 To use it, start by adding the following dependency in your project:
@@ -234,3 +233,4 @@ class PGNCustomizedTest extends PGNTest<CalvinBoard, Move> {
 ```
 
 If you don't want to subclass an existing test, you can subclass the `AbstractAdaptableTest` class to have access to the adapter and being able to use the `@IfVariantSupported` annotation.
+
