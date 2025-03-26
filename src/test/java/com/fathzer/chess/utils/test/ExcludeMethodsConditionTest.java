@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-import com.fathzer.chess.utils.test.ExcludeMethods;
-
 class ExcludeMethodsConditionTest {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
