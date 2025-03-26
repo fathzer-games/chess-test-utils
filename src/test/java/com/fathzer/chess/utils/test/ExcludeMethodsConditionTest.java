@@ -1,4 +1,4 @@
-package com.fathzer.chess.utils.test.helper;
+package com.fathzer.chess.utils.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExtensionContext;
+
+import com.fathzer.chess.utils.test.ExcludeMethods;
 
 class ExcludeMethodsConditionTest {
 

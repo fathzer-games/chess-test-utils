@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import com.fathzer.chess.utils.model.IBoard;
 import com.fathzer.chess.utils.model.Variant;
-import com.fathzer.chess.utils.test.helper.Requires;
 
 /** A test class for move to [Standard Algebraic Notation (SAN)](https://en.wikipedia.org/wiki/Algebraic_notation_(chess)) notation converter.
  * <br> Please note that there are many variants of the SAN standard, this test class uses the variant used in the PGN standard (for instance no <i>'e.p.'</i> for en passant captures).
@@ -28,16 +27,11 @@ public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	@FunctionalInterface
 	public interface SANConverter<B, M> {
 		/** Converts a move to its Standard Algebraic Notation (SAN).
-		 * @param move the move to convert
 		 * @param board the board the move is played on
+		 * @param move the move to convert
 		 * @return the Standard Algebraic Notation (SAN) of the move
-		 * @throws IllegalArgumentException if the move is illegal.
-		 * <br>Note: Throwing an exception is the default behavior, but if your library prefers to return null,
-		 * or a SAN value, you can do so. In such a case, you should override the {@link #checkIllegalMove} method
-		 * accordingly with your library's behavior.
-		 * @see #checkIllegalMove
 		*/
-		String getSAN(M move, B board);
+		String getSAN(B board, M move);
 	}
 
 	/** Gets the SAN converter to test.
@@ -48,18 +42,6 @@ public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 		return (SANConverter<B, M>)adapter;
 	}
 
-	/** Checks if illegal moves are handled correctly.
-	 * <br>The default implementation asserts an {@link IllegalArgumentException} is thrown if the move is illegal.
-	 * <br>Subclasses may override this method to change the behavior if your library handles illegal moves differently.
-	 * @param converter the test SAN converter
-	 * @param uciMove the move to convert, expressed in uci format
-	 * @param board the board the move is played on
-	 */
-	protected void checkIllegalMove(SANConverter<B, M> converter, String uciMove, B board) {
-		final M move = board.toMove(uciMove);
-		assertThrows(IllegalArgumentException.class, () -> converter.getSAN(move, board));
-	}
-
 	private void testSAN(String fen, String uciMove, String expectedSan) {
 		testSAN(fen, STANDARD, uciMove, expectedSan);
 	}
@@ -67,7 +49,7 @@ public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	private void testSAN(String fen, Variant variant, String uciMove, String expectedSan) {
 		final SANConverter<B, M> converter = getSANConverter();
 		final B board = adapter.fenToBoard(fen, variant);
-		assertEquals(expectedSan, converter.getSAN(board.toMove(uciMove), board));
+		assertEquals(expectedSan, converter.getSAN(board, board.toMove(uciMove)));
 	}
 
 	@Test

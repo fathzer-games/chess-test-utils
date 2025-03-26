@@ -80,6 +80,8 @@ public class ChessLibBoard implements IBoard<Move>{
 }
 ```
 
+**Warning**: the Move.toString() method returns the move representation in UCI format. If the `toString()` method of the class you use to represent a move have a different behavior, you have to override the `IBoard.toUCI(M move)` method.
+
 The subclass of `TestAdapter` should also be very simple.
 Here is an example also based on [chesslib](https://github.com/bhlangonijr/chesslib):
 ```java
@@ -100,6 +102,7 @@ public class ChessLibAdapter implements TestAdapter<ChessLibBoard, Move> {
     }
 }
 ```
+
 If your chess library supports [Chess960](https://en.wikipedia.org/wiki/Chess960), add the `@Supports(Variant.Chess960)` to the class.
 
 ```java

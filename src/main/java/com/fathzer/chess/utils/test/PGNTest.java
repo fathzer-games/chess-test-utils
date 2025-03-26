@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import com.fathzer.chess.utils.model.IBoard;
 import com.fathzer.chess.utils.model.Variant;
-import com.fathzer.chess.utils.test.helper.Requires;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -103,6 +102,10 @@ public class PGNTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 			checkMadatoryTags(Variant.CHESS960, parsed, fen, BLACK_WON);
 		}
 
+		/** Gets the message to display when a tag value is wrong.
+		 * @param tag the tag
+		 * @return the message to display
+		 */
 		protected String wrongTag(String tag) {
 			return tag+" tag value is wrong";
 		}

@@ -9,7 +9,6 @@ import org.junit.jupiter.api.*;
 
 import com.fathzer.chess.utils.model.BoardPieceScanner;
 import com.fathzer.chess.utils.model.IBoard;
-import com.fathzer.chess.utils.test.helper.Requires;
 
 /** A test class for <a href="https://en.wikipedia.org/wiki/Chess960">Chess960</a> variant.
  * @param <B> the type of the board

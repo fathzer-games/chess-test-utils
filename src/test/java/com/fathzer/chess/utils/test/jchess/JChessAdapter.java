@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import com.fathzer.chess.utils.model.BoardPieceScanner;
 import com.fathzer.chess.utils.model.TestAdapter;
 import com.fathzer.chess.utils.model.Variant;
+import com.fathzer.chess.utils.test.Supports;
 import com.fathzer.chess.utils.test.PGNTest.PGNConverter;
 import com.fathzer.chess.utils.test.SANTest.SANConverter;
-import com.fathzer.chess.utils.test.helper.Supports;
 import com.fathzer.games.Color;
 import com.fathzer.games.GameHistory;
 import com.fathzer.jchess.Board;
@@ -42,7 +42,7 @@ public class JChessAdapter implements TestAdapter<JChessBoard, JChessMove>, SANC
 	}
 
 	@Override
-	public String getSAN(JChessMove move, JChessBoard board) {
+	public String getSAN(JChessBoard board, JChessMove move) {
 		return sanConverter.get(board.getBoard(), move);
 	}
 

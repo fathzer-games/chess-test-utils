@@ -1,4 +1,4 @@
-package com.fathzer.chess.utils.test.helper;
+package com.fathzer.chess.utils.test;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;

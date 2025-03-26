@@ -9,7 +9,7 @@
 		<version>1.0.8</version>
 	</parent>
 	<artifactId>chess-test-utils</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 
 	<name>chess-test-utils</name>
 	<description>Some JUnit abstract test classes to test chess related libraries.</description>

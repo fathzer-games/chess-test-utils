@@ -7,8 +7,6 @@ import java.util.Arrays;
 import com.fathzer.chess.utils.model.IBoard;
 import com.fathzer.chess.utils.model.TestAdapter;
 import com.fathzer.chess.utils.model.Variant;
-import com.fathzer.chess.utils.test.helper.Requires;
-import com.fathzer.chess.utils.test.helper.Supports;
 
 /** An abstract test class that requires a {@link TestAdapter}.
  * @param <B> the type of the board
