@@ -1,6 +1,6 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.fathzer/chess-test-utils)](https://central.sonatype.com/artifact/com.fathzer/chess-test-utils)
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)](https://github.com/fathzer-games/chess-test-utils/blob/master/LICENSE)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fathzer_chess-test-utils&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fathzer-games_chess-test-utils)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fathzer-games_chess-test-utils&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fathzer-games_chess-test-utils)
 [![javadoc](https://javadoc.io/badge2/com.fathzer/chess-test-utils/javadoc.svg)](https://javadoc.io/doc/com.fathzer/chess-test-utils)
 
 # chess-test-utils
