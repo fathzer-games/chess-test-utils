@@ -4,6 +4,7 @@
 [![javadoc](https://javadoc.io/badge2/com.fathzer/chess-test-utils/javadoc.svg)](https://javadoc.io/doc/com.fathzer/chess-test-utils)
 
 # chess-test-utils
+
 A test framework for chess libraries
 
 Testing is a boring complicated nightmare...
@@ -28,13 +29,14 @@ It contains a set of [JUnit5](https://junit.org/junit5) test classes to test var
     - [Customize tests](#customize-tests)
 
 ## How to install
+
 To use it, start by adding the following dependency in your project:
 
 ```xml
 <dependency>
     <groupId>com.fathzer</groupId>
     <artifactId>chess-test-utils</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -84,6 +86,7 @@ public class ChessLibBoard implements IBoard<Move>{
 
 The subclass of `TestAdapter` should also be very simple.
 Here is an example also based on [chesslib](https://github.com/bhlangonijr/chesslib):
+
 ```java
 import com.fathzer.chess.utils.model.TestAdapter;
 import com.fathzer.chess.utils.model.Variant;
@@ -123,9 +126,10 @@ Now, your're ready for testing!
 ## Write your first test
 
 The first test that any chess engine author should try is
-[PerfTTest](#PerfTTest) (see below for a description of this test).
+[PerftTest](#perfttest) (see below for a description of this test).
 
 To do this, simply create a JUnit5 test suite in the `src/test/java` directory of your project containing the following code:
+
 ```java
 @Suite
 @SuiteDisplayName("Tests from chess-test-utils")
@@ -135,28 +139,33 @@ public class SuiteTest {
 ```
 
 Thats all, this suite will be run with your other tests by `mvn test` command.
-By default, the PerfTTest will be run at depth 2 to keep it fast (see the [PerftTest documentation](#PerftTest) to known how to configure it).
+By default, the PerfTTest will be run at depth 2 to keep it fast (see the [PerftTest documentation](#perfttest) to known how to configure it).
 
 You can then add more tests to this suite (see below for the [list of available tests](#available-tests)).
 
 ## Available tests
+
 All tests are in `com.fathzer.chess.utils.test` package.  
 Some requires extra interfaces to be implemented by your chess library adapter (see test documentation for more information).
 
 ### PerfTTest
+
 This test implements the [PerfT test](https://www.chessprogramming.org/Perft) performance test. It uses the test set provided by the [jchess-perft-dataset](https://github.com/fathzer-games/jchess-perft-dataset) project containing 6969 standard chess positions and 960 chess960 positions.  
 By default, the depth of both standard and chess960 tests is 2. You can change it by setting the `perftDepth` or `chess960PerftDepth` system properties.  
 For example, to run the standard test at depth 4 and keep chess960test at depth 2, you can use `mvn test -DperftDepth=4`.
 
 ### Chess960Test
+
 This test implements some specific tests for [Chess960](https://www.chessprogramming.org/Chess960) move generators.  
 It requires your adapter to have the `@Supports(Variant.Chess960)` annotation and to implement the `com.fathzer.chess.utils.model.BoardPieceScanner` interface.
 
 ### SANTest
+
 This test implements some tests for [SAN](https://en.wikipedia.org/wiki/Algebraic_notation_(chess)) converters.  
 It requires your adapter to implement the `com.fathzer.chess.utils.test.SANTest.SANConverter` interface.
 
 ### PGNTest
+
 This test implements some tests for [PGN](https://www.chessprogramming.org/PGN) builders.  
 It requires your adapter to implement the `com.fathzer.chess.utils.test.PGNTest.PGNParser` interface.
 
@@ -190,11 +199,11 @@ Here is an example that subclasses the SANTest and excludes the `threeQueensAmbi
 ```java
 @ExcludeMethods("threeQueensAmbiguity")
 class MyTest extends SANTest {
-	@Test
-	@IfVariantSupported(Variant.Chess960)
-	void customTest() {
-		//TODO	
-	}
+    @Test
+    @IfVariantSupported(Variant.Chess960)
+    void customTest() {
+        //TODO
+    }
 }
 ```
 
@@ -202,6 +211,7 @@ You may also want to change some test behavior.
 For instance, the [calvin-chess](https://github.com/kelseyde/calvin-chess) library have a PGN builder implementation that is not exactly the one expected by the PGNTest: for Chess960 games, it always use file letters to express the castling rights in the FEN tag (This is the Shredder-FEN way to do this). By default, PGNTest expect [X-FEN](https://en.wikipedia.org/wiki/X-FEN), where letters are used only when the rook involved in the castling move is not the outermost rook.
 
 Fortunately, you can subclass the PGNTest and override the `assertFen` method to customize the comparison. Here is an example, tailored to work with the [calvin-chess](https://github.com/kelseyde/calvin-chess) library:
+
 ```java
 class PGNCustomizedTest extends PGNTest<CalvinBoard, Move> {
     @Override
@@ -219,4 +229,3 @@ class PGNCustomizedTest extends PGNTest<CalvinBoard, Move> {
 ```
 
 If you don't want to subclass an existing test, you can subclass the `AbstractAdaptableTest` class to have access to the adapter and being able to use the `@IfVariantSupported` annotation.
-
