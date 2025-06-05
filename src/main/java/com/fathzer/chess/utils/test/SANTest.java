@@ -131,6 +131,18 @@ public class SANTest<B extends IBoard<M>, M> extends AbstractAdaptableTest<B, M>
 	}
 
 	@Test
+	@Tag("SANTest.knightsAmbiguity")
+	void knightsAmbiguity() {
+		testSAN("rn3r2/pbppq1p1/1p2pN1k/4N3/3P4/3B4/PPP2PPP/R3K2R w KQ - 1 13", "e5g4", "Neg4+");
+	}
+
+	@Test
+	@Tag("SANTest.trickyNoAmbiguity")
+	void trickyNoAmbiguity() {
+		testSAN("rnb1kbnr/pp1ppppp/8/q1p5/3P4/8/PPPNPPPP/R1BQKBNR w KQkq - 0 1", "g1f3", "Nf3");
+	}
+
+	@Test
 	@IfVariantSupported(Variant.CHESS960)
 	@Tag("Chess960")
 	@Tag("SANTest.chess960Castling")
